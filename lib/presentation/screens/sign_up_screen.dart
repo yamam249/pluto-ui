@@ -136,34 +136,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightGrey,
+        backgroundColor: kBgMain,
         body: Center(
           child: SingleChildScrollView(
             child: Container(
               width: 350,
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               decoration: BoxDecoration(
-                color: AppColors.pureWhite,
+                color: kFontColorLight,
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
-                  BoxShadow(
-                    color: AppColors.slateBlue,
-                    blurRadius: 20,
-                    spreadRadius: 3,
-                  ),
+                  BoxShadow(color: kBgActive, blurRadius: 20, spreadRadius: 3),
                 ],
               ),
 
               child: Column(
                 children: [
-                  Icon(Icons.person_add, size: 60, color: AppColors.navyBlue),
+                  Icon(Icons.person_add, size: 60, color: kFontColorDark),
                   const SizedBox(height: 10),
                   Text(
                     "إنشاء حساب",
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.navyBlue,
+                      color: kFontColorDark,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -218,20 +214,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ? null
                           : () => _submitSignup(context),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.navyBlue,
+                        backgroundColor: kFontColorDark,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       child: _isLoading
-                          ? const CircularProgressIndicator(
-                              color: AppColors.pureWhite,
-                            )
-                          : const Text(
+                          ? CircularProgressIndicator(color: kFontColorLight)
+                          : Text(
                               "إنشاء حساب",
                               style: TextStyle(
                                 fontSize: 18,
-                                color: AppColors.pureWhite,
+                                color: kFontColorLight,
                               ),
                             ),
                     ),
@@ -275,14 +269,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintText: label,
         errorText: errorText,
         filled: true,
-        fillColor: AppColors.lightGrey,
+        fillColor: kBgMain,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.brightRed, width: 1.5),
+          borderSide: BorderSide(color: kColorDanger, width: 1.5),
         ),
       ),
     );
@@ -297,15 +291,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintText: "رقم الموبايل",
         errorText: errorText,
         filled: true,
-        fillColor: AppColors.lightGrey,
-        suffixIcon: Icon(Icons.phone_android, color: AppColors.navyBlue),
+        fillColor: kBgMain,
+        suffixIcon: Icon(Icons.phone_android, color: kFontColorDark),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.brightRed, width: 1.5),
+          borderSide: BorderSide(color: kColorDanger, width: 1.5),
         ),
       ),
     );
@@ -320,15 +314,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintText: " كلمة المرور",
         errorText: errorText,
         filled: true,
-        fillColor: AppColors.lightGrey,
-        suffixIcon: const Icon(Icons.lock, color: AppColors.navyBlue),
+        fillColor: kBgMain,
+        suffixIcon: Icon(Icons.lock, color: kFontColorDark),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.brightRed, width: 1.5),
+          borderSide: BorderSide(color: kColorDanger, width: 1.5),
         ),
       ),
     );
@@ -348,15 +342,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintText: label,
         errorText: errorText,
         filled: true,
-        fillColor: AppColors.lightGrey,
-        suffixIcon: Icon(Icons.calendar_today, color: AppColors.navyBlue),
+        fillColor: kBgMain,
+        suffixIcon: Icon(Icons.calendar_today, color: kFontColorDark),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.brightRed, width: 1.5),
+          borderSide: BorderSide(color: kColorDanger, width: 1.5),
         ),
       ),
     );
@@ -376,15 +370,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintText: label,
         errorText: errorText,
         filled: true,
-        fillColor: AppColors.lightGrey,
-        prefixIcon: Icon(icon, color: AppColors.navyBlue),
+        fillColor: kBgMain,
+        prefixIcon: Icon(icon, color: kFontColorDark),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.brightRed, width: 1.5),
+          borderSide: BorderSide(color: kColorDanger, width: 1.5),
         ),
       ),
       onTap: () => _pickImage(controller),
