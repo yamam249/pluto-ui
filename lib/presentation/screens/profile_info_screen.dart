@@ -1,73 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 
-class ProfileInfoScreen extends StatefulWidget {
-  const ProfileInfoScreen({super.key});
+class ProfileInfoScreen extends StatelessWidget {
+  final bool isDark;
 
-  @override
-  State<ProfileInfoScreen> createState() => _ProfileInfoScreenState();
-}
-
-class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
-  // بيانات المستخدم
-  String firstName = "Ahmad";
-  String lastName = "Ali";
-  String phone = "+963 999 999";
-  String birthdate = "2000-01-01";
+  const ProfileInfoScreen({super.key, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
+    final bgColor = AppColors.bgMain(isDark);
+    final cardColor = AppColors.bgCard(isDark);
+    final fontColor = AppColors.fontColor(isDark);
+
+    String firstName = "Ahmad";
+    String lastName = "Ali";
+    String phone = "+963 999 999";
+    String birthdate = "2000-01-01";
+
     return Scaffold(
-      backgroundColor: kBgMain,
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: Text(
-          "Profile Info",
-          style: TextStyle(color: kFontColorDark),
-        ),
-        backgroundColor: kBgCard,
+        title: Text("Profile Info", style: TextStyle(color: fontColor)),
+        backgroundColor: cardColor,
         elevation: 0,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // صورة البروفايل
             Center(
-              child: CircleAvatar(
-                radius: 60,
-                backgroundImage: NetworkImage(
-                  "https://i.pravatar.cc/150?img=3",
-                ),
-              ),
-            ),
+                child: CircleAvatar(
+                    radius: 60,
+                    backgroundImage:
+                    NetworkImage("https://i.pravatar.cc/150?img=3"))),
             const SizedBox(height: 20),
-
-            // معلومات المستخدم
-            _buildInfoCard("First Name", firstName),
-            _buildInfoCard("Last Name", lastName),
-            _buildInfoCard("Phone", phone),
-            _buildInfoCard("Birthdate", birthdate),
+            _buildInfoCard("First Name", firstName, cardColor, fontColor),
+            _buildInfoCard("Last Name", lastName, cardColor, fontColor),
+            _buildInfoCard("Phone", phone, cardColor, fontColor),
+            _buildInfoCard("Birthdate", birthdate, cardColor, fontColor),
           ],
         ),
       ),
     );
   }
 
-  // Widget لكل حقل معلومات
-  Widget _buildInfoCard(String title, String value) {
+  Widget _buildInfoCard(String title, String value, Color cardColor, Color fontColor) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: kBgCard,
+        color: cardColor,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8, offset: const Offset(0, 4))],
       ),
       child: Row(
         children: [
@@ -75,31 +59,18 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: kFontColorDark.withOpacity(0.8),
-                  ),
-                ),
+                Text(title,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: fontColor.withOpacity(0.8))),
                 const SizedBox(height: 5),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: kFontColorDark,
-                  ),
-                ),
+                Text(value, style: TextStyle(fontSize: 18, color: fontColor)),
               ],
             ),
           ),
         ],
       ),
     );
-  }
-
-
-
   }
 }

@@ -5,33 +5,44 @@ import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/presentation/screens/filter_page.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final bool isDark;
+  final ValueChanged<bool> onThemeChanged;
+
+  const HomeScreen({
+    super.key,
+    required this.isDark,
+    required this.onThemeChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final bgColor = AppColors.bgMain(isDark);
+    final appBarColor = AppColors.bgCard(isDark);
+    final fontColor = AppColors.fontColor(isDark);
+    final subColor = AppColors.subFontColor(isDark);
+
     return Scaffold(
-      backgroundColor: kBgMain,
+      backgroundColor: bgColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: appBarColor,
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Pluto',
-              style: TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
-            ),
+            Text('Pluto',
+                style: TextStyle(
+                    color: fontColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24)),
             IconButton(
-              icon: const Icon(Icons.filter_list, color: Colors.black87),
+              icon: Icon(Icons.filter_list, color: fontColor),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FilterPage()),
+                  MaterialPageRoute(
+                    builder: (_) => FilterPage(isDark: isDark),
+                  ),
                 );
               },
             ),
@@ -39,9 +50,16 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body: ListView.builder(
+        padding: const EdgeInsets.all(16),
         itemCount: mockPlaces.length,
         itemBuilder: (context, index) {
-          return PlaceCard(place: mockPlaces[index]);
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: PlaceCard(
+              place: mockPlaces[index],
+              isDark: isDark,
+            ),
+          );
         },
       ),
     );

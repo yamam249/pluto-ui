@@ -1,184 +1,146 @@
-// lib/presentation/screens/filter_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 
 class FilterPage extends StatefulWidget {
-  const FilterPage({super.key});
+  final bool isDark;
+
+  const FilterPage({super.key, required this.isDark});
 
   @override
   State<FilterPage> createState() => _FilterPageState();
 }
 
 class _FilterPageState extends State<FilterPage> {
-  String? selectedGovernorate;
+  String? selectedCity;
 
-  final List<String> syrianGovernorates = [
-    "دمشق",
-    "ريف دمشق",
-    "حلب",
-    "حمص",
-    "حماة",
-    "اللاذقية",
-    "طرطوس",
-    "إدلب",
-    "درعا",
-    "القنيطرة",
-    "السويداء",
-    "دير الزور",
-    "الحسكة",
-    "الرقة",
-  ];
+  final List<String> cities = ["Damascus", "Homs", "Latakia"];
 
   final TextEditingController areaController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  final TextEditingController areaSizeController = TextEditingController();
   final TextEditingController roomsController = TextEditingController();
-  final TextEditingController districtController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final bg = AppColors.bgMain(widget.isDark);
+    final card = AppColors.bgCard(widget.isDark);
+    final fontColor = AppColors.fontColor(widget.isDark);
+    final subColor = AppColors.subFontColor(widget.isDark);
+
+    InputDecoration inputDec(String hint) => InputDecoration(
+      filled: true,
+      fillColor: card,
+      hintText: hint,
+      hintStyle: TextStyle(color: subColor),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+    );
+
     return Scaffold(
+      backgroundColor: bg,
       appBar: AppBar(
-        backgroundColor: kBgCard,
+        backgroundColor: card,
         elevation: 0,
-        iconTheme: IconThemeData(color: kFontColorDark),
+        centerTitle: true,
         title: Text(
-          "Filter",
+          "Filters",
           style: TextStyle(
-            color: kFontColorDark,
-            fontWeight: FontWeight.bold,
+            color: fontColor,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
           ),
         ),
+        iconTheme: IconThemeData(color: fontColor),
       ),
-
-      backgroundColor: kBgMain,
-
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
-
-            _buildLabel("المحافظة"),
-
-            const SizedBox(height: 8),
-
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              decoration: BoxDecoration(
-                color: kBgCard,
-                borderRadius: BorderRadius.circular(12),
+            Text("City",
+                style: TextStyle(
+                    color: subColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: card,
+                border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: DropdownButton<String>(
-                value: selectedGovernorate,
-                isExpanded: true,
-                underline: const SizedBox(),
-                hint: Text("اختر المحافظة", style: TextStyle(color: kFontColorDark)),
-                items: syrianGovernorates.map((gov) {
-                  return DropdownMenuItem(
-                    value: gov,
-                    child: Text(gov),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedGovernorate = value;
-                  });
-                },
-              ),
+              value: selectedCity,
+              hint: Text("Select city", style: TextStyle(color: subColor)),
+              items: cities
+                  .map((city) => DropdownMenuItem(
+                  value: city, child: Text(city)))
+                  .toList(),
+              onChanged: (val) => setState(() => selectedCity = val),
             ),
-
             const SizedBox(height: 20),
-
-            _buildLabel("المنطقة"),
-            const SizedBox(height: 8),
-            _buildTextField(controller: districtController, hint: "مثال: المزة"),
-
-            const SizedBox(height: 20),
-
-            _buildLabel("السعر (البادجت)"),
-            const SizedBox(height: 8),
-            _buildTextField(
-              controller: priceController,
-              hint: "مثال: 500000000",
-              keyboardType: TextInputType.number,
-            ),
-
-            const SizedBox(height: 20),
-
-            _buildLabel("المساحة"),
-            const SizedBox(height: 8),
-            _buildTextField(
+            Text("Area",
+                style: TextStyle(
+                    color: subColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            TextField(
               controller: areaController,
-              hint: "مثال: 150 م²",
-              keyboardType: TextInputType.number,
+              decoration: inputDec("Enter area name"),
+              style: TextStyle(color: fontColor),
             ),
-
             const SizedBox(height: 20),
-
-            _buildLabel("عدد الغرف"),
-            const SizedBox(height: 8),
-            _buildTextField(
-              controller: roomsController,
-              hint: "مثال: 3",
+            Text("Price",
+                style: TextStyle(
+                    color: subColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            TextField(
+              controller: priceController,
               keyboardType: TextInputType.number,
+              decoration: inputDec("Enter price"),
+              style: TextStyle(color: fontColor),
             ),
-
+            const SizedBox(height: 20),
+            Text("Area Size (m²)",
+                style: TextStyle(
+                    color: subColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            TextField(
+              controller: areaSizeController,
+              keyboardType: TextInputType.number,
+              decoration: inputDec("Enter area size"),
+              style: TextStyle(color: fontColor),
+            ),
+            const SizedBox(height: 20),
+            Text("Rooms",
+                style: TextStyle(
+                    color: subColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            TextField(
+              controller: roomsController,
+              keyboardType: TextInputType.number,
+              decoration: inputDec("Enter number of rooms"),
+              style: TextStyle(color: fontColor),
+            ),
             const SizedBox(height: 30),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kFontColorDark,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Apply Filter",
-                  style: TextStyle(fontSize: 18, color: kFontColorLight),
-                ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary(widget.isDark),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                "Apply Filters",
+                style: TextStyle(
+                    color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLabel(String text) {
-    return Text(
-      text,
-      style: TextStyle(
-        color: kFontColorDark,
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hint,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        color: kBgCard,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
         ),
       ),
     );
