@@ -22,11 +22,13 @@ class _PlaceCardState extends State<PlaceCard> {
     int full = rating.floor();
     bool half = (rating - full) >= 0.5;
 
+    final primaryColor = AppColors.primary(widget.isDark); // 🛑 تم إضافة متغير اللون الأساسي
+
     for (int i = 0; i < 5; i++) {
       if (i < full) {
-        stars.add(Icon(Icons.star, color: kPrimaryColor, size: 16));
+        stars.add(Icon(Icons.star, color: primaryColor, size: 16)); // 🛑 تم التصحيح
       } else if (i == full && half) {
-        stars.add(Icon(Icons.star_half, color: kPrimaryColor, size: 16));
+        stars.add(Icon(Icons.star_half, color: primaryColor, size: 16)); // 🛑 تم التصحيح
       } else {
         stars.add(Icon(Icons.star_border, color: AppColors.bgActive(widget.isDark), size: 16));
       }
@@ -42,6 +44,7 @@ class _PlaceCardState extends State<PlaceCard> {
 
     return Card(
       color: bgCard,
+      // ملاحظة: يُفضل ترك الـ margin الخارجي في الـ Padding/ListView.builder المحيط
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 4,
@@ -69,10 +72,10 @@ class _PlaceCardState extends State<PlaceCard> {
                     widget.place.isFavorite ? Icons.favorite : Icons.favorite_border,
                     color: widget.place.isFavorite
                         ? AppColors.danger(widget.isDark)
-
                         : AppColors.bgActive(widget.isDark),
                   ),
                   onPressed: () {
+                    // يجب عليك هنا تحديث الحالة في الـ model
                     setState(() {
                       widget.place.isFavorite = !widget.place.isFavorite;
                     });

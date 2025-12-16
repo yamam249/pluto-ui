@@ -45,7 +45,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
   void showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: kColorDanger,
+        backgroundColor: AppColors.kColorDanger, // 🛑 تم التصحيح
         content: Text(message, style: const TextStyle(color: Colors.white)),
       ),
     );
@@ -54,7 +54,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
   void showSuccess(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: kColorSuccess,
+        backgroundColor: AppColors.kColorSuccess, // 🛑 تم التصحيح
         content: Text(message, style: const TextStyle(color: Colors.white)),
       ),
     );
@@ -144,7 +144,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: kPrimaryColor,
+                  backgroundColor: AppColors.kPrimaryColor, // 🛑 تم التصحيح
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),

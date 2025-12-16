@@ -34,7 +34,7 @@ class HistoryScreen extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: 10),
             color: cardColor,
             child: ListTile(
-              leading: Icon(Icons.house, size: 30, color: kPrimaryColor),
+              leading: Icon(Icons.house, size: 30, color: AppColors.kPrimaryColor), // 🛑 تم التصحيح
               title: Text(houses[i]["name"]!,
                   style: TextStyle(color: fontColor, fontWeight: FontWeight.bold)),
               subtitle: Text("Rented on: ${houses[i]["date"]}",
@@ -42,8 +42,8 @@ class HistoryScreen extends StatelessWidget {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(icon: Icon(Icons.edit, color: kPrimaryColor), onPressed: () {}),
-                  IconButton(icon: Icon(Icons.delete, color: kColorDanger), onPressed: () {}),
+                  IconButton(icon: Icon(Icons.edit, color: AppColors.kPrimaryColor), onPressed: () {}), // 🛑 تم التصحيح
+                  IconButton(icon: Icon(Icons.delete, color: AppColors.kColorDanger), onPressed: () {}), // 🛑 تم التصحيح
                 ],
               ),
             ),

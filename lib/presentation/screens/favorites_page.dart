@@ -25,7 +25,8 @@ class FavoritesPage extends StatelessWidget {
       backgroundColor: bg,
       appBar: AppBar(
         backgroundColor: cardColor,
-        title: Text("Favorites", style: TextStyle(color: fontColor),    fontWeight: FontWeight.bold,),
+        // 🛑 تم التصحيح: نقل fontWeight داخل الـ TextStyle
+        title: Text("Favorites", style: TextStyle(color: fontColor, fontWeight: FontWeight.bold)),
         elevation: 1,
         iconTheme: IconThemeData(color: fontColor),
       ),

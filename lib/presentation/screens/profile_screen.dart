@@ -52,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (_) =>
-                            ProfileInfoScreen(isDark: widget.isDark))),
+                            ProfileInfoScreen(isDark: widget.isDark))), // 🛑 تم تمرير isDark
                 color: fontColor),
             _buildItem(
                 icon: Icons.history,
@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 icon: Icons.logout,
                 text: "Logout",
                 onTap: () => showLogoutDialog(context),
-                color: kColorDanger),
+                color: AppColors.kColorDanger), // 🛑 تم التصحيح
             const SizedBox(height: 30),
           ],
         ),
