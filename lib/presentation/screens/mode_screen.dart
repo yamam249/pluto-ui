@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 
-class ModeScreen extends StatefulWidget {
-  const ModeScreen({super.key});
-
-  @override
-  State<ModeScreen> createState() => _ModeScreenState();
-}
-
-class _ModeScreenState extends State<ModeScreen> {
-  bool dark = false;
+class ModeScreen extends StatelessWidget {
+  final bool dark;
+  final ValueChanged<bool> onChange;
+  const ModeScreen({super.key, required this.dark, required this.onChange});
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +14,8 @@ class _ModeScreenState extends State<ModeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "Dark Mode",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Switch(
-              value: dark,
-              onChanged: (v) => setState(() => dark = v),
-            )
+            const Text("Dark Mode", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Switch(value: dark, onChanged: onChange),
           ],
         ),
       ),

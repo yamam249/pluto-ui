@@ -7,35 +7,65 @@ import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/presentation/screens/filter_page.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final bool isDark;
+  final ValueChanged<bool> onThemeChanged;
+
+  const HomeScreen({
+    super.key,
+    required this.isDark,
+    required this.onThemeChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     final apartmentCubit = context.read<ApartmentCubit>();
+
+    final bgColor = AppColors.bgMain(isDark);
+    final appBarColor = AppColors.bgCard(isDark);
+    final fontColor = AppColors.fontColor(isDark);
+    final subColor = AppColors.subFontColor(isDark);
+
     return Scaffold(
-      backgroundColor: kBgMain,
+      backgroundColor: bgColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: kFontColorLight,
+
+        // backgroundColor: kFontColorLight,
+        backgroundColor: appBarColor,
+
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Text(
+            //   'Pluto',
+            //   style: TextStyle(
+            //     color: kFontColorDark,
+            //     fontWeight: FontWeight.bold,
+            //     fontSize: 24,
+            //   ),
+            // ),
+            // IconButton(
+            //   icon: Icon(Icons.filter_list, color: kFontColorDark),
+            //   onPressed: () async {
+            //     // Navigate and await the filter results (the Map<String, dynamic>)
+            //     final Map<String, dynamic>? filters = await Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => const FilterPage()),
             Text(
               'Pluto',
               style: TextStyle(
-                color: kFontColorDark,
+                color: fontColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
             ),
             IconButton(
-              icon: Icon(Icons.filter_list, color: kFontColorDark),
+              icon: Icon(Icons.filter_list, color: fontColor),
               onPressed: () async {
-                // Navigate and await the filter results (the Map<String, dynamic>)
                 final Map<String, dynamic>? filters = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const FilterPage()),
+                  MaterialPageRoute(builder: (_) => FilterPage(isDark: isDark)),
                 );
 
                 // Check if the user returned any filters
@@ -54,7 +84,7 @@ class HomeScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is ApartmentLoading) {
             return Center(
-              child: CircularProgressIndicator(color: kFontColorDark),
+              child: CircularProgressIndicator(color: AppColors.kFontColorDark),
             );
           }
           if (state is ApartmentError) {
@@ -64,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                 child: Text(
                   'Error loading apartments: ${state.message}',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: kColorDanger, fontSize: 16),
+                  style: TextStyle(color: AppColors.kColorDanger, fontSize: 16),
                 ),
               ),
             );
@@ -95,6 +125,7 @@ class HomeScreen extends StatelessWidget {
 
                   child: PlaceCard(
                     place: apartment,
+                    isDark: isDark,
                     // // 🛑 THE KEY CHANGE: Pass the callback function
                     // onFavoriteToggle: () {
                     //   _toggleFavorite(context, apartment);
@@ -106,6 +137,18 @@ class HomeScreen extends StatelessWidget {
           }
           // Default/Initial State UI
           return const SizedBox.shrink(); // Hide everything until data starts loading
+
+          // body: ListView.builder(
+          //   padding: const EdgeInsets.all(16),
+          //   itemCount: mockPlaces.length,
+          //   itemBuilder: (context, index) {
+          //     return Padding(
+          //       padding: const EdgeInsets.only(bottom: 16),
+          //       child: PlaceCard(
+          //         place: mockPlaces[index],
+          //         isDark: isDark,
+          //       ),
+          //     );
         },
       ),
     );

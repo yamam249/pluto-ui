@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/sign_up_cubit/cubit/sign_up_cubit.dart';
-import 'package:pluto_ui/constants/app_colors.dart';
+import 'package:pluto_ui/constants/app_colors.dart'; // ✅ تم الاستيراد الصحيح
 import 'package:pluto_ui/data/models/signup_request_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -42,7 +42,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       context: context,
       initialDate: DateTime(2000),
       firstDate: DateTime(1925),
-
       lastDate: DateTime(2007),
     );
     if (picked != null) {
@@ -115,7 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           // حالة خطأ التحقق (422)
           setState(() {
             validationErrors = state.errors.map(
-              (key, value) => MapEntry(key, List<String>.from(value)),
+                  (key, value) => MapEntry(key, List<String>.from(value)),
             );
           });
           ScaffoldMessenger.of(context).showSnackBar(
@@ -136,30 +135,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: kBgMain,
+        backgroundColor: AppColors.kBgMain, // 🛑 تم التصحيح
         body: Center(
           child: SingleChildScrollView(
             child: Container(
               width: 350,
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               decoration: BoxDecoration(
-                color: kFontColorLight,
+                color: AppColors.kFontColorLight, // 🛑 تم التصحيح
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
-                  BoxShadow(color: kBgActive, blurRadius: 20, spreadRadius: 3),
+                  BoxShadow(color: AppColors.kBgActive, blurRadius: 20, spreadRadius: 3), // 🛑 تم التصحيح
                 ],
               ),
-
               child: Column(
                 children: [
-                  Icon(Icons.person_add, size: 60, color: kFontColorDark),
+                  Icon(Icons.person_add, size: 60, color: AppColors.kFontColorDark), // 🛑 تم التصحيح
                   const SizedBox(height: 10),
                   Text(
                     "إنشاء حساب",
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
-                      color: kFontColorDark,
+                      color: AppColors.kFontColorDark, // 🛑 تم التصحيح
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -214,20 +212,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ? null
                           : () => _submitSignup(context),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: kFontColorDark,
+                        backgroundColor: AppColors.kFontColorDark, // 🛑 تم التصحيح
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       child: _isLoading
-                          ? CircularProgressIndicator(color: kFontColorLight)
+                          ? CircularProgressIndicator(color: AppColors.kFontColorLight) // 🛑 تم التصحيح
                           : Text(
-                              "إنشاء حساب",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: kFontColorLight,
-                              ),
-                            ),
+                        "إنشاء حساب",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppColors.kFontColorLight, // 🛑 تم التصحيح
+                        ),
+                      ),
                     ),
                   ),
 
@@ -258,10 +256,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _inputField(
-    String label,
-    TextEditingController controller,
-    String? errorText,
-  ) {
+      String label,
+      TextEditingController controller,
+      String? errorText,
+      ) {
     return TextField(
       controller: controller,
       textAlign: TextAlign.right,
@@ -269,14 +267,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintText: label,
         errorText: errorText,
         filled: true,
-        fillColor: kBgMain,
+        fillColor: AppColors.kBgMain, // 🛑 تم التصحيح
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: kColorDanger, width: 1.5),
+          borderSide: BorderSide(color: AppColors.kColorDanger, width: 1.5), // 🛑 تم التصحيح
         ),
       ),
     );
@@ -291,15 +289,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintText: "رقم الموبايل",
         errorText: errorText,
         filled: true,
-        fillColor: kBgMain,
-        suffixIcon: Icon(Icons.phone_android, color: kFontColorDark),
+        fillColor: AppColors.kBgMain, // 🛑 تم التصحيح
+        suffixIcon: Icon(Icons.phone_android, color: AppColors.kFontColorDark), // 🛑 تم التصحيح
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: kColorDanger, width: 1.5),
+          borderSide: BorderSide(color: AppColors.kColorDanger, width: 1.5), // 🛑 تم التصحيح
         ),
       ),
     );
@@ -314,25 +312,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintText: " كلمة المرور",
         errorText: errorText,
         filled: true,
-        fillColor: kBgMain,
-        suffixIcon: Icon(Icons.lock, color: kFontColorDark),
+        fillColor: AppColors.kBgMain, // 🛑 تم التصحيح
+        suffixIcon: Icon(Icons.lock, color: AppColors.kFontColorDark), // 🛑 تم التصحيح
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: kColorDanger, width: 1.5),
+          borderSide: BorderSide(color: AppColors.kColorDanger, width: 1.5), // 🛑 تم التصحيح
         ),
       ),
     );
   }
 
   Widget _dateField(
-    String label,
-    TextEditingController controller,
-    String? errorText,
-  ) {
+      String label,
+      TextEditingController controller,
+      String? errorText,
+      ) {
     return TextField(
       controller: controller,
       textAlign: TextAlign.right,
@@ -342,15 +340,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintText: label,
         errorText: errorText,
         filled: true,
-        fillColor: kBgMain,
-        suffixIcon: Icon(Icons.calendar_today, color: kFontColorDark),
+        fillColor: AppColors.kBgMain, // 🛑 تم التصحيح
+        suffixIcon: Icon(Icons.calendar_today, color: AppColors.kFontColorDark), // 🛑 تم التصحيح
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: kColorDanger, width: 1.5),
+          borderSide: BorderSide(color: AppColors.kColorDanger, width: 1.5), // 🛑 تم التصحيح
         ),
       ),
     );
@@ -370,15 +368,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintText: label,
         errorText: errorText,
         filled: true,
-        fillColor: kBgMain,
-        prefixIcon: Icon(icon, color: kFontColorDark),
+        fillColor: AppColors.kBgMain, // 🛑 تم التصحيح
+        prefixIcon: Icon(icon, color: AppColors.kFontColorDark), // 🛑 تم التصحيح
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: kColorDanger, width: 1.5),
+          borderSide: BorderSide(color: AppColors.kColorDanger, width: 1.5), // 🛑 تم التصحيح
         ),
       ),
       onTap: () => _pickImage(controller),

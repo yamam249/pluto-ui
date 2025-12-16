@@ -28,14 +28,14 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
       expandedHeight: 600,
       pinned: true,
       stretch: true,
-      backgroundColor: kBgMain,
+      backgroundColor: AppColors.kBgMain,
       flexibleSpace: FlexibleSpaceBar(
         // centerTitle: true,
         title: Text(
           // textAlign: TextAlign.center,
           '${apartmentModel.governorate}, ${apartmentModel.city}',
           style: TextStyle(
-            color: kFontColorDark,
+            color: AppColors.kFontColorDark,
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),
@@ -60,14 +60,14 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
           TextSpan(
             text: title,
             style: TextStyle(
-              color: kFontColorDark,
+              color: AppColors.kFontColorDark,
               fontWeight: FontWeight.bold,
               fontSize: 18,
             ),
           ),
           TextSpan(
             text: value,
-            style: TextStyle(color: kFontColorDark, fontSize: 16),
+            style: TextStyle(color: AppColors.kFontColorDark, fontSize: 16),
           ),
         ],
       ),
@@ -78,7 +78,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
     return Divider(
       height: 30,
       endIndent: endIndent,
-      color: kFontColorLight,
+      color: AppColors.kFontColorLight,
       thickness: 2,
     );
   }
@@ -86,12 +86,12 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kFontColorLight,
+      backgroundColor: AppColors.kFontColorLight,
       body: BlocBuilder<ApartmentDetailsCubit, ApartmentDetailsState>(
         builder: (context, state) {
           if (state is ApartmentDetailsLoading) {
             return Center(
-              child: CircularProgressIndicator(color: kFontColorDark),
+              child: CircularProgressIndicator(color: AppColors.kFontColorDark),
             );
           }
 
@@ -102,7 +102,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                 child: Text(
                   'Error loading details: ${state.message}',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: kColorDanger, fontSize: 18),
+                  style: TextStyle(color: AppColors.kColorDanger, fontSize: 18),
                 ),
               ),
             );
