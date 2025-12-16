@@ -11,8 +11,9 @@ class FavoritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // قائمة البيوت المعمول لها Favorite
-    final favoritePlaces =
-    mockPlaces.where((place) => place.isFavorite == true).toList();
+    final favoritePlaces = mockPlaces
+        .where((place) => place.isFavorite == true)
+        .toList();
 
     return Scaffold(
       backgroundColor: kBgMain,
@@ -33,25 +34,25 @@ class FavoritesPage extends StatelessWidget {
 
       body: favoritePlaces.isEmpty
           ? const Center(
-        child: Text(
-          "No favorite houses yet",
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      )
+              child: Text(
+                "No favorite houses yet",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            )
           : ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: favoritePlaces.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: PlaceCard(place: favoritePlaces[index]),
-          );
-        },
-      ),
+              padding: const EdgeInsets.all(16),
+              itemCount: favoritePlaces.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  // child: PlaceCard(place: favoritePlaces[index]),
+                );
+              },
+            ),
     );
   }
 }

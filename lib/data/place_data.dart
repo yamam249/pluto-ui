@@ -1,4 +1,5 @@
 // lib/data/place_data.dart
+//there is no need for this file
 import 'models/place_model.dart';
 
 final List<PlaceModel> mockPlaces = [

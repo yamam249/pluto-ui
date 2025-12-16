@@ -66,9 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           );
-          // Navigator.of(context).pushReplacement(
-          //   MaterialPageRoute(builder: (_) => const HomeScreen()),
-          // );
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const HomeScreen()),
+          );
         } else if (state is LoginValidationError) {
           setState(() {
             validationErrors = state.errors.map(

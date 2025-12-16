@@ -1,0 +1,38 @@
+import 'package:bloc/bloc.dart';
+import 'package:meta/meta.dart';
+import 'package:equatable/equatable.dart';
+import 'package:pluto_ui/data/models/apartment_model.dart';
+import 'package:pluto_ui/data/repositories/apartment_repo.dart';
+import 'package:pluto_ui/data/web_services/login_api.dart' show ApiException;
+
+part 'apartment_state.dart';
+
+class ApartmentCubit extends Cubit<ApartmentState> {
+  final ApartmentRepo apartmentRepo;
+
+  ApartmentCubit(this.apartmentRepo) : super(ApartmentInitial());
+
+  /// Fetches apartments, handling both initial load and filtered searches.
+  /// If filters map is null/empty, it calls the 'getAllApartments' method.
+  Future<void> fetchApartments({Map<String, dynamic>? filters}) async {
+    emit(ApartmentLoading());
+
+    try {
+      final List<ApartmentModel> apartments;
+
+      if (filters == null || filters.isEmpty) {
+        // Fetch all apartments (Home Screen default)
+        apartments = await apartmentRepo.getAllApartments();
+      } else {
+        // Fetch filtered apartments (Filter Screen result)
+        apartments = await apartmentRepo.getFilteredApartments(filters);
+      }
+
+      emit(ApartmentLoaded(apartments));
+    } on ApiException catch (e) {
+      emit(ApartmentError(e.message));
+    } catch (e) {
+      emit(ApartmentError('An unexpected error occurred: ${e.toString()}'));
+    }
+  }
+}

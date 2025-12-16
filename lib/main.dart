@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pluto_ui/business_logic/apartment_cubit/cubit/apartment_cubit.dart';
+import 'package:pluto_ui/business_logic/apartment_details_cubit/cubit/apartment_details_cubit.dart';
+import 'package:pluto_ui/data/repositories/apartment_repo.dart';
+import 'package:pluto_ui/data/web_services/apartment_api.dart';
 
 // Data Layer Imports
 import 'package:pluto_ui/data/web_services/signup_api.dart';
@@ -13,6 +17,7 @@ import 'package:pluto_ui/data/local_storage/secure_storage_service.dart';
 // Business Logic Layer Imports
 import 'package:pluto_ui/business_logic/sign_up_cubit/cubit/sign_up_cubit.dart';
 import 'package:pluto_ui/business_logic/login_cubit/cubit/login_cubit.dart';
+import 'package:pluto_ui/presentation/screens/apartment_details_screen.dart';
 
 // Presentation Layer Imports
 import 'package:pluto_ui/presentation/screens/root_layout.dart';
@@ -34,6 +39,7 @@ class PlutoApp extends StatelessWidget {
   // Services/APIs
   final SignupApi signupApi = SignupApi();
   final LoginApi loginApi = LoginApi();
+  final ApartmentApi apartmentApi = ApartmentApi();
   final SecureStorageService secureStorageService = SecureStorageService();
 
   // Repositories (Injecting Services)
@@ -42,7 +48,10 @@ class PlutoApp extends StatelessWidget {
     loginApi,
     secureStorageService,
   );
-
+  late final ApartmentRepo apartmentRepo = ApartmentRepo(
+    apartmentApi,
+    secureStorageService,
+  );
   @override
   Widget build(BuildContext context) {
     // Use MultiBlocProvider to provide all top-level BLoCs/Cubits
@@ -58,6 +67,20 @@ class PlutoApp extends StatelessWidget {
             cubit.checkAuthStatus();
             return cubit;
           },
+        ),
+
+        // 3. Apartment Cubit Provider
+        BlocProvider<ApartmentCubit>(
+          create: (context) {
+            final cubit = ApartmentCubit(apartmentRepo);
+            // 💡 CRITICAL: Fetch apartments immediately upon creation for the Home Screen
+            cubit.fetchApartments();
+            return cubit;
+          },
+        ),
+
+        BlocProvider<ApartmentDetailsCubit>(
+          create: (context) => ApartmentDetailsCubit(apartmentRepo),
         ),
       ],
       // The RootLayout should handle checking the auth state and navigating
