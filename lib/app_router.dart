@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pluto_ui/data/models/apartment_model.dart';
+import 'package:pluto_ui/data/web_services/apartment_api.dart';
 import 'package:pluto_ui/presentation/screens/home_screen.dart';
 import 'package:pluto_ui/presentation/screens/favorites_page.dart';
 import 'package:pluto_ui/presentation/screens/profile_screen.dart';
@@ -20,21 +22,18 @@ class RootLayout extends StatefulWidget {
 }
 
 class _RootLayoutState extends State<RootLayout> {
+  // late ApartmentModel added by me
+  late ApartmentModel apartmentModel;
   int currentIndex = 0;
   final String profileImageUrl = "https://i.pravatar.cc/150?img=3";
 
   @override
   Widget build(BuildContext context) {
     final screens = [
-      HomeScreen(
-        isDark: widget.isDark,
-        onThemeChanged: widget.onThemeChanged,
-      ),
-      FavoritesPage(isDark: widget.isDark),
+      HomeScreen(isDark: widget.isDark, onThemeChanged: widget.onThemeChanged),
+      FavoritesPage(isDark: widget.isDark, apartmentModel: apartmentModel),
       AddPropertyScreen(isDark: widget.isDark),
-      Placeholder(
-        color: widget.isDark ? Colors.white70 : Colors.black26,
-      ),
+      Placeholder(color: widget.isDark ? Colors.white70 : Colors.black26),
       ProfileScreen(
         isDark: widget.isDark,
         onThemeChanged: widget.onThemeChanged,
@@ -62,7 +61,10 @@ class _RootLayoutState extends State<RootLayout> {
           const BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
           const BottomNavigationBarItem(icon: Icon(Icons.favorite), label: ""),
           const BottomNavigationBarItem(icon: Icon(Icons.add), label: ""),
-          const BottomNavigationBarItem(icon: Icon(Icons.notifications_none), label: ""),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_none),
+            label: "",
+          ),
           BottomNavigationBarItem(
             label: "",
             icon: CircleAvatar(

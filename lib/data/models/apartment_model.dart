@@ -72,7 +72,7 @@ class ApartmentModel {
   final String photo;
 
   // Local State Field (Not from API)
-  final bool isFavorite;
+  bool isFavorite;
 
   // ----------------------------------------------------
   // DETAIL-SPECIFIC FIELDS (Must be Nullable for the List response)
