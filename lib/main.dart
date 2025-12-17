@@ -84,8 +84,8 @@ class PlutoApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-
-        /// ✅ هنا الراوتر
+        // home: RootLayout(isDark: false, onThemeChanged: (_) {}),
+        // /// ✅ هنا الراوتر
         initialRoute: '/login',
         routes: {
           '/login': (context) => const LoginScreen(),
