@@ -54,4 +54,24 @@ class LoginAuthRepo {
   Future<void> logout() async {
     return await secureStorageService.deleteToken();
   }
+
+  Future<void> logoutUser() async {
+    try {
+      // 1. Get the current token
+      final token = await secureStorageService.getToken();
+
+      if (token != null) {
+        // 2. Inform the server to revoke the token
+        await loginApi.logout(token);
+      }
+    } on ApiException catch (e) {
+      print(
+        'Repo: Server logout failed, but proceeding to clear local storage: ${e.message}',
+      );
+    } finally {
+      // 3. Always delete the token locally to ensure the user is "logged out" in the UI
+      await secureStorageService.deleteToken();
+      print('✅ Repo: Local token deleted.');
+    }
+  }
 }

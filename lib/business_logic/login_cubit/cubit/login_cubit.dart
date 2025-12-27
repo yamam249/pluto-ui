@@ -38,4 +38,17 @@ class LoginCubit extends Cubit<LoginState> {
     final token = await loginAuthRepo.getAuthToken();
     emit(AuthStatusChecked(token != null));
   }
+
+  Future<void> logout() async {
+    emit(LogoutLoading());
+
+    try {
+      await loginAuthRepo.logoutUser();
+      print('Cubit: Logout successful, emitting LogoutSuccess');
+      emit(LogoutSuccess());
+    } catch (e) {
+      print('Cubit: Logout error');
+      emit(LogoutFailure(e.toString()));
+    }
+  }
 }

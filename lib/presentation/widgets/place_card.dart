@@ -141,6 +141,8 @@
 //   }) : super(key: key);
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pluto_ui/business_logic/favorite_cubit/cubit/favorite_cubit.dart';
 import 'package:pluto_ui/data/models/apartment_model.dart';
 
 import 'package:pluto_ui/constants/app_colors.dart';
@@ -156,6 +158,19 @@ class PlaceCard extends StatefulWidget {
 }
 
 class _PlaceCardState extends State<PlaceCard> {
+  bool _isProcessing = false;
+
+  @override
+  void didUpdateWidget(covariant PlaceCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // If the apartment object changes (e.g., favorite status updated in Cubit),
+    // this ensures the State object recognizes the new data.
+    if (oldWidget.place.isFavorite != widget.place.isFavorite) {
+      // You don't necessarily need to call setState here because
+      // the build method will run immediately after this.
+    }
+  }
+
   Widget _buildRatingStars(double rating) {
     List<Widget> stars = [];
     int full = rating.floor();
@@ -219,41 +234,58 @@ class _PlaceCardState extends State<PlaceCard> {
                   ),
                 ),
 
-                // أيقونة القلب
-                //     IconButton(
-                //       icon: Icon(
-                //         // 🛑 استخدام isFavorite من ApartmentModel
-                //         place.isFavorite ? Icons.favorite : Icons.favorite_border,
-                //         color: place.isFavorite ? kColorDanger : Colors.grey,
-                //       ),
-                //       // 🛑 تمرير الضغطة إلى الـ callback
-                //       onPressed: onFavoriteToggle,
-                //     ),
-                //   ],
-                // ),
-                // 🛑 CHANGE: Simplified Heart Icon
-                // IconButton(
-                //   icon: Icon(
-                //     Icons.favorite_border, // Show un-interactable border heart
-                //     color: Colors.grey,
-                //   ),
-                //   onPressed: () {
-                // 🛑 DISABLED INTERACTION: Do nothing for now
                 IconButton(
-                  icon: Icon(
-                    widget.place.isFavorite
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: widget.place.isFavorite
-                        ? AppColors.danger(widget.isDark)
-                        : AppColors.bgActive(widget.isDark),
-                  ),
-                  onPressed: () {
-                    // يجب عليك هنا تحديث الحالة في الـ model
-                    setState(() {
-                      widget.place.isFavorite = !widget.place.isFavorite;
-                    });
-                  },
+                  icon: _isProcessing
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.kFontColorDark,
+                          ),
+                        )
+                      : Icon(
+                          widget.place.isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: widget.place.isFavorite
+                              ? AppColors.danger(widget.isDark)
+                              : AppColors.bgActive(widget.isDark),
+                        ),
+                  onPressed: _isProcessing
+                      ? null
+                      : () async {
+                          setState(() => _isProcessing = true);
+
+                          // Trigger the API call via the Cubit
+                          await context
+                              .read<FavoriteCubit>()
+                              .toggleFavoriteStatus(widget.place);
+
+                          // Update the local heart color for immediate feedback
+                          // setState(() {
+                          //   widget.place.isFavorite = !widget.place.isFavorite;
+                          //   _isProcessing = false;
+                          // });
+
+                          if (mounted) {
+                            setState(() {
+                              _isProcessing = false;
+                            });
+                          }
+
+                          //  Show feedback
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                widget.place.isFavorite
+                                    ? "Added to favorites"
+                                    : "Removed from favorites",
+                              ),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        },
                 ),
               ],
             ),
@@ -281,15 +313,6 @@ class _PlaceCardState extends State<PlaceCard> {
                 ),
 
                 _buildRatingStars(widget.place.rate),
-                // =======
-                //                     Text("Location", style: TextStyle(color: subColor, fontSize: 14)),
-                //                     Text(widget.place.location,
-                //                         style: TextStyle(
-                //                             fontSize: 20, fontWeight: FontWeight.bold, color: fontColor)),
-                //                   ],
-                //                 ),
-                //                 _buildRatingStars(widget.place.rating),
-                // >>>>>>> origin/masa
               ],
             ),
           ],

@@ -117,4 +117,25 @@ class LoginApi {
       throw ApiException("حدث خطأ غير معروف.");
     }
   }
+
+  Future<void> logout(String token) async {
+    try {
+      // Send the POST request with the Bearer token in the header
+      Response response = await dio.post(
+        'auth/logout',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200) {
+        print('✅ API: Logout successful.');
+      }
+    } on DioException catch (e) {
+      // Even if the API fails (e.g., token already expired),
+      // we usually proceed to clear local data.
+      print('⚠️ API Logout Error: ${e.message}');
+      throw ApiException(
+        e.response?.data['message'] ?? "فشل تسجيل الخروج من السيرفر.",
+      );
+    }
+  }
 }

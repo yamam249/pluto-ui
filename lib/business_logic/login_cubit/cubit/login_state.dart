@@ -26,3 +26,13 @@ final class AuthStatusChecked extends LoginState {
   final bool isLoggedIn;
   AuthStatusChecked(this.isLoggedIn);
 }
+
+final class LogoutSuccess extends LoginState {}
+
+final class LogoutLoading extends LoginState {}
+
+final class LogoutFailure extends LoginState {
+  final String errorMessage;
+
+  LogoutFailure(this.errorMessage);
+}
