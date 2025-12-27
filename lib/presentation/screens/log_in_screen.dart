@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pluto_ui/app_router.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/login_cubit/cubit/login_cubit.dart';
@@ -74,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                '✅ تم تسجيل الدخول بنجاح',
+                ' successful log in ✅',
                 textAlign: TextAlign.center,
               ),
             ),
@@ -82,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (_) => HomeScreen(isDark: false, onThemeChanged: (_) {}),
+              builder: (_) => RootLayout(isDark: false, onThemeChanged: (_) {}),
             ),
           );
         } else if (state is LoginValidationError) {
@@ -94,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                '⚠️ يرجى تصحيح الأخطاء ',
+                'correct the mistakes, please ⚠️ ',
                 textAlign: TextAlign.center,
               ),
             ),
@@ -105,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                '❌ فشل تسجيل الدخول: ${state.errorMessage}',
+                ' the log in have failed ❌ : ${state.errorMessage}',
                 textAlign: TextAlign.center,
               ),
             ),
@@ -142,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ), // ✅ تم تصحيح اللون
                   const SizedBox(height: 15),
                   Text(
-                    "تسجيل دخول",
+                    "log in",
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -188,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: cardColor,
                             ) // ✅ تم تصحيح اللون (استخدام لون فاتح)
                           : Text(
-                              "تسجيل دخول",
+                              " log in",
                               style: TextStyle(
                                 fontSize: 18,
                                 color: cardColor, // ✅ تم تصحيح اللون (لون فاتح)
@@ -202,13 +203,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      const Text("Don't you have an account ?"),
+
                       GestureDetector(
                         // 🚀 هنا يجب إضافة دالة التنقل
                         onTap: () {
                           Navigator.pushNamed(context, '/signup');
                         },
                         child: Text(
-                          " إنشاء حساب جديد ",
+                          " create a new account ",
                           style: TextStyle(
                             fontSize: 15,
                             color: primaryColor, // ✅ استخدام اللون الأساسي
@@ -216,7 +219,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      const Text(" ليس لديك حساب؟ "),
                     ],
                   ),
                 ],
@@ -237,15 +239,15 @@ class _LoginScreenState extends State<LoginScreen> {
   ) {
     return TextField(
       controller: controller,
-      textAlign: TextAlign.right,
+      textAlign: TextAlign.left,
       keyboardType: TextInputType.phone,
       style: TextStyle(color: fontColor), // إضافة لون الخط
       decoration: InputDecoration(
-        hintText: "رقم الهاتف",
+        hintText: " phone number",
         errorText: errorText,
         filled: true,
         fillColor: bgColor, // ✅ تم تصحيح اللون
-        suffixIcon: Icon(
+        prefixIcon: Icon(
           Icons.phone_android,
           color: fontColor,
         ), // ✅ تم تصحيح اللون
@@ -273,15 +275,15 @@ class _LoginScreenState extends State<LoginScreen> {
   ) {
     return TextField(
       controller: controller,
-      textAlign: TextAlign.right,
+      textAlign: TextAlign.left,
       obscureText: true,
       style: TextStyle(color: fontColor), // إضافة لون الخط
       decoration: InputDecoration(
-        hintText: "كلمة المرور",
+        hintText: "password ",
         errorText: errorText,
         filled: true,
         fillColor: bgColor, // ✅ تم تصحيح اللون
-        suffixIcon: Icon(Icons.lock, color: fontColor), // ✅ تم تصحيح اللون
+        prefixIcon: Icon(Icons.lock, color: fontColor), // ✅ تم تصحيح اللون
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,

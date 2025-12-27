@@ -37,21 +37,6 @@ class HomeScreen extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Text(
-            //   'Pluto',
-            //   style: TextStyle(
-            //     color: kFontColorDark,
-            //     fontWeight: FontWeight.bold,
-            //     fontSize: 24,
-            //   ),
-            // ),
-            // IconButton(
-            //   icon: Icon(Icons.filter_list, color: kFontColorDark),
-            //   onPressed: () async {
-            //     // Navigate and await the filter results (the Map<String, dynamic>)
-            //     final Map<String, dynamic>? filters = await Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => const FilterPage()),
             Text(
               'Pluto',
               style: TextStyle(
@@ -80,76 +65,83 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
 
-      body: BlocBuilder<ApartmentCubit, ApartmentState>(
-        builder: (context, state) {
-          if (state is ApartmentLoading) {
-            return Center(
-              child: CircularProgressIndicator(color: AppColors.kFontColorDark),
-            );
-          }
-          if (state is ApartmentError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  'Error loading apartments: ${state.message}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.kColorDanger, fontSize: 16),
-                ),
-              ),
-            );
-          }
-          if (state is ApartmentLoaded) {
-            if (state.apartments.isEmpty) {
-              return const Center(
-                child: Text(
-                  'No apartments found.',
-                  style: TextStyle(fontSize: 18),
+      body: RefreshIndicator(
+        color: AppColors.kFontColorDark,
+        backgroundColor: AppColors.kBgMain,
+        //color: AppColors.bgActive(isDark), // Customize the spinner color
+        onRefresh: () async {
+          // This calls the ApartmentCubit to fetch fresh data
+          // We return the future so the spinner stays until the data is loaded
+          await context.read<ApartmentCubit>().fetchApartments();
+        },
+        child: BlocBuilder<ApartmentCubit, ApartmentState>(
+          builder: (context, state) {
+            if (state is ApartmentLoading) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.kFontColorDark,
                 ),
               );
             }
-
-            return ListView.builder(
-              itemCount: state.apartments.length,
-              itemBuilder: (context, index) {
-                final apartment = state.apartments[index];
-
-                return InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ApartmentDetailsScreen(apartmentId: apartment.id),
+            if (state is ApartmentError) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    'Error loading apartments: ${state.message}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.kColorDanger,
+                      fontSize: 16,
                     ),
                   ),
-
-                  child: PlaceCard(
-                    place: apartment,
-                    isDark: isDark,
-                    // // 🛑 THE KEY CHANGE: Pass the callback function
-                    // onFavoriteToggle: () {
-                    //   _toggleFavorite(context, apartment);
-                    // },
+                ),
+              );
+            }
+            if (state is ApartmentLoaded) {
+              if (state.apartments.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No apartments found.',
+                    style: TextStyle(fontSize: 18),
                   ),
                 );
-              },
-            );
-          }
-          // Default/Initial State UI
-          return const SizedBox.shrink(); // Hide everything until data starts loading
+              }
 
-          // body: ListView.builder(
-          //   padding: const EdgeInsets.all(16),
-          //   itemCount: mockPlaces.length,
-          //   itemBuilder: (context, index) {
-          //     return Padding(
-          //       padding: const EdgeInsets.only(bottom: 16),
-          //       child: PlaceCard(
-          //         place: mockPlaces[index],
-          //         isDark: isDark,
-          //       ),
-          //     );
-        },
+              return ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: state.apartments.length,
+                itemBuilder: (context, index) {
+                  final apartment = state.apartments[index];
+
+                  return InkWell(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ApartmentDetailsScreen(apartmentId: apartment.id),
+                      ),
+                    ),
+
+                    child: PlaceCard(place: apartment, isDark: isDark),
+                  );
+                },
+              );
+            } else {
+              // Error or Initial state
+              return ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.3),
+                  const Center(child: Text("Pull down to try again")),
+                ],
+              );
+            }
+
+            // Default/Initial State UI
+            // return const SizedBox.shrink(); // Hide everything until data starts loading
+          },
+        ),
       ),
     );
   }

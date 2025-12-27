@@ -9,10 +9,15 @@ part 'apartment_details_state.dart';
 
 class ApartmentDetailsCubit extends Cubit<ApartmentDetailsState> {
   final ApartmentRepo apartmentRepo;
+  Future<void> Function()? _lastFailedAction;
 
   ApartmentDetailsCubit(this.apartmentRepo) : super(ApartmentDetailsInitial());
+  Future<void> retryLastAction() async {
+    if (_lastFailedAction != null) await _lastFailedAction!();
+  }
 
   Future<void> fetchApartmentDetails(int apartmentId) async {
+    _lastFailedAction = () => fetchApartmentDetails(apartmentId);
     emit(ApartmentDetailsLoading());
 
     try {
@@ -21,6 +26,7 @@ class ApartmentDetailsCubit extends Cubit<ApartmentDetailsState> {
       );
 
       emit(ApartmentDetailsLoaded(apartment));
+      _lastFailedAction = null;
     } on ApiException catch (e) {
       emit(ApartmentDetailsError(e.message));
     } catch (e) {

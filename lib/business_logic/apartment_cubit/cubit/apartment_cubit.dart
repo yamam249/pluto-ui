@@ -9,12 +9,36 @@ part 'apartment_state.dart';
 
 class ApartmentCubit extends Cubit<ApartmentState> {
   final ApartmentRepo apartmentRepo;
-
+  Future<void> Function()? _lastFailedAction;
   ApartmentCubit(this.apartmentRepo) : super(ApartmentInitial());
+  Future<void> retryLastAction() async {
+    if (_lastFailedAction != null) await _lastFailedAction!();
+  }
+
+  // inside apartment_cubit.dart
+
+  void updateApartmentFavoriteStatus(int apartmentId, bool isFavorite) {
+    if (state is ApartmentLoaded) {
+      final currentApartments = (state as ApartmentLoaded).apartments;
+
+      // Create a new list with the updated apartment
+      final updatedList = currentApartments.map((apt) {
+        if (apt.id == apartmentId) {
+          // Return a copy of the apartment with the new status
+          apt.isFavorite = isFavorite;
+          return apt;
+        }
+        return apt;
+      }).toList();
+
+      emit(ApartmentLoaded(updatedList));
+    }
+  }
 
   /// Fetches apartments, handling both initial load and filtered searches.
   /// If filters map is null/empty, it calls the 'getAllApartments' method.
   Future<void> fetchApartments({Map<String, dynamic>? filters}) async {
+    _lastFailedAction = () => fetchApartments(filters: filters);
     emit(ApartmentLoading());
 
     try {
@@ -29,6 +53,7 @@ class ApartmentCubit extends Cubit<ApartmentState> {
       }
 
       emit(ApartmentLoaded(apartments));
+      _lastFailedAction = null;
     } on ApiException catch (e) {
       emit(ApartmentError(e.message));
     } catch (e) {

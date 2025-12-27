@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pluto_ui/constants/strings.dart';
+import 'package:pluto_ui/data/models/city_model.dart';
+import 'package:pluto_ui/data/models/governorate_model.dart';
 import 'package:pluto_ui/data/web_services/login_api.dart' show ApiException;
 import '../models/apartment_model.dart';
 
@@ -150,6 +152,221 @@ class ApartmentApi {
     } on Exception catch (e) {
       print('💥 GENERAL EXCEPTION CAUGHT: ${e.toString()}');
       throw ApiException('An unexpected error occurred: ${e.toString()}');
+    }
+  }
+
+  /// Fetches the list of governorates for the filter dropdown.
+  Future<List<GovernorateModel>> fetchGovernorates(String authToken) async {
+    try {
+      final options = Options(headers: {'Authorization': 'Bearer $authToken'});
+
+      final response = await _dio.get('/governorates', options: options);
+
+      if (response.statusCode == 200) {
+        final dynamic responsePayload = response.data;
+
+        if (responsePayload is Map<String, dynamic> &&
+            responsePayload['data'] is List) {
+          final List<dynamic> data = responsePayload['data'];
+
+          return data
+              .whereType<
+                Map<String, dynamic>
+              >() // Ensure each item in the list is a Map
+              .map(GovernorateModel.fromJson)
+              .toList();
+        }
+
+        throw ApiException('Invalid data format received for governorates.');
+      }
+
+      throw ApiException(
+        'Failed to load governorates with status: ${response.statusCode}',
+      );
+    } on DioException catch (e) {
+      _handleDioError(e);
+      rethrow;
+    } on Exception catch (e) {
+      print('💥 GENERAL EXCEPTION CAUGHT: ${e.toString()}');
+      throw ApiException('An unexpected error occurred: ${e.toString()}');
+    }
+  }
+
+  /// Fetches cities belonging to a specific governorate.
+  Future<List<CityModel>> fetchCities(
+    String authToken,
+    int governorateId,
+  ) async {
+    try {
+      final options = Options(headers: {'Authorization': 'Bearer $authToken'});
+
+      final response = await _dio.get(
+        '/governorates/$governorateId/cities',
+        options: options,
+      );
+
+      if (response.statusCode == 200) {
+        final dynamic responsePayload = response.data;
+
+        // Validation check for the data format
+        if (responsePayload is Map<String, dynamic> &&
+            responsePayload['data'] is List) {
+          final List<dynamic> data = responsePayload['data'];
+
+          return data
+              .whereType<Map<String, dynamic>>() // Ensure each item is a Map
+              .map(CityModel.fromJson)
+              .toList();
+        }
+        throw ApiException('Invalid data format received for cities.');
+      }
+
+      throw ApiException(
+        'Failed to load cities with status: ${response.statusCode}',
+      );
+    } on DioException catch (e) {
+      _handleDioError(e);
+      rethrow;
+    } on Exception catch (e) {
+      print('💥 GENERAL EXCEPTION CAUGHT: ${e.toString()}');
+      throw ApiException('An unexpected error occurred: ${e.toString()}');
+    }
+  }
+
+  /// Fetches all cities (no governorate filter)
+  Future<List<CityModel>> fetchAllCities(String authToken) async {
+    try {
+      final options = Options(headers: {'Authorization': 'Bearer $authToken'});
+
+      final response = await _dio.get('/cities', options: options);
+
+      if (response.statusCode == 200) {
+        final dynamic responsePayload = response.data;
+
+        if (responsePayload is Map<String, dynamic> &&
+            responsePayload['data'] is List) {
+          final List<dynamic> data = responsePayload['data'];
+
+          return data
+              .whereType<Map<String, dynamic>>()
+              .map(CityModel.fromJson)
+              .toList();
+        }
+
+        throw ApiException('Invalid data format received for cities.');
+      }
+
+      throw ApiException(
+        'Failed to load cities with status: ${response.statusCode}',
+      );
+    } on DioException catch (e) {
+      _handleDioError(e);
+      rethrow;
+    } on Exception catch (e) {
+      throw ApiException('An unexpected error occurred: ${e.toString()}');
+    }
+  }
+
+  /// Fetches the user's list of favorite apartments.
+  Future<List<ApartmentModel>> fetchFavorites(String authToken) async {
+    try {
+      final options = Options(headers: {'Authorization': 'Bearer $authToken'});
+
+      // Note: The endpoint provided was /user/favourites
+      final response = await _dio.get('/user/favourites', options: options);
+
+      print('✅ FAVORITES RAW RESPONSE STATUS: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final dynamic responsePayload = response.data;
+
+        if (responsePayload is! Map<String, dynamic>) {
+          throw ApiException('API response root is not a Map.');
+        }
+
+        final dynamic rawData = responsePayload['data'];
+        if (rawData is! List) {
+          throw ApiException('Invalid data format received for favorites.');
+        }
+
+        final List<dynamic> favoriteData = rawData;
+
+        return favoriteData.whereType<Map<String, dynamic>>().map((json) {
+          // We use the existing fromJson, which handles missing detail fields (price, rooms, etc.)
+          // AND we force isFavorite to true because these are from the favorites list.
+          return ApartmentModel.fromJson(json).copyWith(isFavorite: true);
+        }).toList();
+      }
+
+      throw ApiException(
+        'Failed to fetch favorites with status: ${response.statusCode}',
+      );
+    } on DioException catch (e) {
+      _handleDioError(e);
+      rethrow;
+    } on Exception catch (e) {
+      print('💥 GENERAL EXCEPTION CAUGHT: ${e.toString()}');
+      throw ApiException('An unexpected error occurred: ${e.toString()}');
+    }
+  }
+
+  /// Adds an apartment to favorites by its ID.
+  Future<String> addFavorite(String authToken, int apartmentId) async {
+    try {
+      final options = Options(headers: {'Authorization': 'Bearer $authToken'});
+
+      // The endpoint is /user/favourites/{id}
+      final response = await _dio.post(
+        '/user/favourites/$apartmentId',
+        options: options,
+      );
+
+      if (response.statusCode == 200) {
+        return response.data['message'] ?? 'Added to favorites';
+      }
+
+      throw ApiException('Unexpected error occurred');
+    } on DioException catch (e) {
+      // Special handling for 409: Already in favorites
+      if (e.response?.statusCode == 409) {
+        return e.response?.data['message'] ?? 'Already in favorites';
+      }
+
+      // Special handling for 404: Apartment not found
+      if (e.response?.statusCode == 404) {
+        throw ApiException(
+          'The apartment you are trying to favorite no longer exists.',
+        );
+      }
+
+      _handleDioError(e);
+      rethrow;
+    }
+  }
+
+  /// Removes an apartment from favorites by its ID.
+  Future<String> removeFavorite(String authToken, int apartmentId) async {
+    try {
+      final options = Options(headers: {'Authorization': 'Bearer $authToken'});
+
+      final response = await _dio.delete(
+        '/user/favourites/$apartmentId',
+        options: options,
+      );
+
+      if (response.statusCode == 200) {
+        return response.data['message'] ?? 'Apartment removed from favourites';
+      }
+
+      throw ApiException('Unexpected error occurred');
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw ApiException(
+          'This apartment is not in your favorites or doesn\'t exist.',
+        );
+      }
+      _handleDioError(e);
+      rethrow;
     }
   }
 }

@@ -106,7 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                '✅ تم إنشاء الحساب بنجاح ',
+                ' successful account creation ✅ ',
                 textAlign: TextAlign.center,
               ),
             ),
@@ -124,7 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                '⚠️ يرجى تصحيح الأخطاء  ',
+                'correct the mistakes ⚠️',
                 textAlign: TextAlign.center,
               ),
             ),
@@ -133,7 +133,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           // حالة الفشل العام
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('❌ فشل التسجيل', textAlign: TextAlign.center),
+              content: Text(
+                ' the register have failed ❌',
+                textAlign: TextAlign.center,
+              ),
             ),
           );
         }
@@ -165,7 +168,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ), // 🛑 تم التصحيح
                   const SizedBox(height: 10),
                   Text(
-                    "إنشاء حساب",
+                    " account creation",
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -175,13 +178,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 20),
 
                   _inputField(
-                    "الاسم الأول",
+                    " first name",
                     _firstNameController,
                     getErrorForField('first_name'),
                   ),
                   const SizedBox(height: 15),
                   _inputField(
-                    "الاسم الأخير",
+                    "last name ",
                     _lastNameController,
                     getErrorForField('last_name'),
                   ),
@@ -189,7 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   _phoneField(_phoneController, getErrorForField('phone')),
                   const SizedBox(height: 15),
                   _dateField(
-                    "تاريخ الميلاد",
+                    " birth date",
                     _birthDateController,
                     getErrorForField('birth_date'),
                   ),
@@ -197,14 +200,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   _photoPathField(
                     icon: Icons.camera_alt,
-                    label: "صورة شخصية",
+                    label: " profile photo",
                     controller: _profileImageController,
                     errorText: getErrorForField('profile_image'),
                   ),
                   const SizedBox(height: 15),
                   _photoPathField(
                     icon: Icons.badge,
-                    label: "صورة الهوية",
+                    label: " id photo",
                     controller: _idImageController,
                     errorText: getErrorForField('id_image'),
                   ),
@@ -235,7 +238,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               color: AppColors.kFontColorLight,
                             ) // 🛑 تم التصحيح
                           : Text(
-                              "إنشاء حساب",
+                              " create the account ",
                               style: TextStyle(
                                 fontSize: 18,
                                 color:
@@ -246,22 +249,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
 
                   const SizedBox(height: 5),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     GestureDetector(
-                  //       onTap: () {},
-                  //       child: Text(
-                  //         "تسجيل دخول",
-                  //         style: TextStyle(
-                  //           color: AppColors.darkBlue,
-                  //           fontWeight: FontWeight.bold,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     const Text("لديك حساب؟ "),
-                  //   ],
-                  // ),
                 ],
               ),
             ),
@@ -278,7 +265,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   ) {
     return TextField(
       controller: controller,
-      textAlign: TextAlign.right,
+      textAlign: TextAlign.left,
       decoration: InputDecoration(
         hintText: label,
         errorText: errorText,
@@ -302,14 +289,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _phoneField(TextEditingController controller, String? errorText) {
     return TextField(
       controller: controller,
-      textAlign: TextAlign.right,
+      textAlign: TextAlign.left,
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
-        hintText: "رقم الموبايل",
+        hintText: "phone number",
         errorText: errorText,
         filled: true,
         fillColor: AppColors.kBgMain, // 🛑 تم التصحيح
-        suffixIcon: Icon(
+        prefixIcon: Icon(
           Icons.phone_android,
           color: AppColors.kFontColorDark,
         ), // 🛑 تم التصحيح
@@ -331,14 +318,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _passwordField(TextEditingController controller, String? errorText) {
     return TextField(
       controller: controller,
-      textAlign: TextAlign.right,
+      textAlign: TextAlign.left,
       obscureText: true,
       decoration: InputDecoration(
-        hintText: " كلمة المرور",
+        hintText: "password",
         errorText: errorText,
         filled: true,
         fillColor: AppColors.kBgMain, // 🛑 تم التصحيح
-        suffixIcon: Icon(
+        prefixIcon: Icon(
           Icons.lock,
           color: AppColors.kFontColorDark,
         ), // 🛑 تم التصحيح
@@ -364,7 +351,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   ) {
     return TextField(
       controller: controller,
-      textAlign: TextAlign.right,
+      textAlign: TextAlign.left,
       readOnly: true,
       onTap: () => _selectDate(context),
       decoration: InputDecoration(
@@ -372,7 +359,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         errorText: errorText,
         filled: true,
         fillColor: AppColors.kBgMain, // 🛑 تم التصحيح
-        suffixIcon: Icon(
+        prefixIcon: Icon(
           Icons.calendar_today,
           color: AppColors.kFontColorDark,
         ), // 🛑 تم التصحيح
@@ -399,7 +386,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }) {
     return TextField(
       controller: controller,
-      textAlign: TextAlign.right,
+      textAlign: TextAlign.left,
       readOnly: true,
       decoration: InputDecoration(
         hintText: label,
