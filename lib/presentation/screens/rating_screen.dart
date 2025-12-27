@@ -21,24 +21,23 @@ class _RatingScreenState extends State<RatingScreen> {
   // متغير لتخزين قيمة التقييم الحالية (من 1 إلى 5)
   double _currentRating = 3.0; 
   
-  // 🛑 تم حذف: final TextEditingController _reviewController = TextEditingController();
+ 
 
   @override
   void dispose() {
-    // 🛑 تم حذف: _reviewController.dispose();
+   
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // 1. جلب الألوان المعتمدة على الثيم
+   
     final isDark = widget.isDark;
     final bg = AppColors.bgMain(isDark);
     final cardColor = AppColors.bgCard(isDark);
     final fontColor = AppColors.fontColor(isDark);
     final primaryColor = AppColors.primary(isDark);
-    // 🛑 تم حذف: final fontHintColor = AppColors.fontColor(isDark).withOpacity(0.7);
-
+   
 
     return Scaffold(
       backgroundColor: bg,
@@ -55,7 +54,7 @@ class _RatingScreenState extends State<RatingScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            // 2. تفاصيل العقار
+           
             _buildPropertyDetails(context, cardColor, fontColor),
 
             const SizedBox(height: 30),
@@ -70,14 +69,10 @@ class _RatingScreenState extends State<RatingScreen> {
 
             _buildRatingStars(primaryColor),
 
-            // 🛑 تم حذف: const SizedBox(height: 20),
-
-            // 🛑 تم حذف: حقل كتابة المراجعة
-            // 🛑 تم حذف: _buildReviewField(cardColor, fontColor, primaryColor, fontHintColor),
-
+          
             const SizedBox(height: 30),
             
-            // 4. زر الإرسال
+            
             _buildSubmitButton(primaryColor),
           ],
         ),
@@ -150,17 +145,15 @@ class _RatingScreenState extends State<RatingScreen> {
     );
   }
   
-  // 🛑 تم حذف: دالة _buildReviewField بالكامل
-
-  // دالة بناء زر الإرسال
+ 
   Widget _buildSubmitButton(Color primaryColor) {
     return ElevatedButton(
       onPressed: () {
-        // تنفيذ منطق إرسال التقييم هنا
+       
         final ratingData = {
           'propertyId': widget.apartmentModel.id,
           'rating': _currentRating,
-          // 🛑 تم حذف: 'review': _reviewController.text,
+         
         };
         print('Submitting Rating: $ratingData');
         

@@ -5,6 +5,7 @@ import 'package:pluto_ui/presentation/screens/apartment_details_screen.dart';
 import 'package:pluto_ui/presentation/widgets/place_card.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/presentation/screens/filter_page.dart';
+import 'package:pluto_ui/presentation/screens/notification_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final bool isDark;

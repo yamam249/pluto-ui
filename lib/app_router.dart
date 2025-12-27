@@ -6,6 +6,7 @@ import 'package:pluto_ui/presentation/screens/favorites_page.dart';
 import 'package:pluto_ui/presentation/screens/profile_screen.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/presentation/screens/add_property_screen.dart';
+import 'package:pluto_ui/presentation/screens/notification_screen.dart';
 
 class RootLayout extends StatefulWidget {
   final bool isDark;
@@ -31,7 +32,7 @@ class _RootLayoutState extends State<RootLayout> {
       HomeScreen(isDark: widget.isDark, onThemeChanged: widget.onThemeChanged),
       FavoritesPage(isDark: widget.isDark),
       AddPropertyScreen(isDark: widget.isDark),
-      Placeholder(color: widget.isDark ? Colors.white70 : Colors.black26),
+      NotificationScreen(isDark: widget.isDark),
       ProfileScreen(
         isDark: widget.isDark,
         onThemeChanged: widget.onThemeChanged,

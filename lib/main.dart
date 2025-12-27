@@ -35,6 +35,7 @@ import 'package:pluto_ui/presentation/screens/log_in_screen.dart';
 import 'package:pluto_ui/presentation/screens/sign_up_screen.dart';
 import 'package:pluto_ui/app_router.dart';
 
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
