@@ -33,8 +33,7 @@ import 'package:pluto_ui/presentation/screens/apartment_details_screen.dart';
 // Screens
 import 'package:pluto_ui/presentation/screens/log_in_screen.dart';
 import 'package:pluto_ui/presentation/screens/sign_up_screen.dart';
-import 'package:pluto_ui/app_router.dart';
-
+import 'package:pluto_ui/root_layout.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() {
@@ -142,8 +141,8 @@ class PlutoApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         // home: RootLayout(isDark: false, onThemeChanged: (_) {}),
         // /// ✅ هنا الراوتر
-        // initialRoute: '/login',
-        initialRoute: '/app_router',
+        initialRoute: '/login',
+        // initialRoute: '/app_router',
 
         // // The builder ensures this listener stays active across all routes/screens
         // builder: (context, child) {
@@ -261,8 +260,8 @@ class PlutoApp extends StatelessWidget {
         },
 
         routes: {
-          // '/login': (context) => const LoginScreen(),
-          // '/signup': (context) => const SignUpScreen(),
+          '/login': (context) => const LoginScreen(),
+          '/signup': (context) => const SignUpScreen(),
           '/app_router': (context) =>
               RootLayout(isDark: false, onThemeChanged: (_) {}),
         },

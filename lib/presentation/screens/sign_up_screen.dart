@@ -105,6 +105,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           // حالة النجاح
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              behavior: SnackBarBehavior.floating,
+
+              backgroundColor: AppColors.kColorSuccess,
+
               content: Text(
                 ' successful account creation ✅ ',
                 textAlign: TextAlign.center,
@@ -123,6 +127,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
+              behavior: SnackBarBehavior.floating,
+
+              backgroundColor: AppColors.kColorDanger,
               content: Text(
                 'correct the mistakes ⚠️',
                 textAlign: TextAlign.center,
@@ -133,12 +140,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
           // حالة الفشل العام
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              behavior: SnackBarBehavior.floating,
+
+              backgroundColor: AppColors.kColorDanger,
+
               content: Text(
                 ' the register have failed ❌',
                 textAlign: TextAlign.center,
               ),
             ),
           );
+          print(state.errorMessage);
         }
       },
       child: Scaffold(
@@ -354,6 +366,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       textAlign: TextAlign.left,
       readOnly: true,
       onTap: () => _selectDate(context),
+
       decoration: InputDecoration(
         hintText: label,
         errorText: errorText,

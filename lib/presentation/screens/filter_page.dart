@@ -122,11 +122,16 @@ class _FilterPageState extends State<FilterPage> {
                   }
 
                   return DropdownButtonFormField<GovernorateModel>(
+                    dropdownColor: AppColors.bgCard(widget.isDark),
                     decoration: inputDec("Select governorate"),
                     value: selectedGovernorate,
+                    alignment: Alignment.center,
+
                     items: govsToShow.map((gov) {
                       return DropdownMenuItem(
                         value: gov,
+                        alignment: Alignment.center,
+
                         child: Text(gov.name),
                       );
                     }).toList(),
@@ -178,9 +183,13 @@ class _FilterPageState extends State<FilterPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DropdownButtonFormField<CityModel>(
+                        dropdownColor: AppColors.bgCard(widget.isDark),
+
                         // Dynamically change the decoration hint
                         decoration: inputDec(hintText),
                         value: selectedCity,
+                        alignment: Alignment.center,
+
                         // The text shown when the dropdown is disabled
                         disabledHint: Text(
                           hintText,
@@ -189,6 +198,8 @@ class _FilterPageState extends State<FilterPage> {
                         items: currentCities.map((city) {
                           return DropdownMenuItem(
                             value: city,
+                            alignment: Alignment.center,
+
                             child: Text(city.name),
                           );
                         }).toList(),

@@ -305,7 +305,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pluto_ui/app_router.dart';
+import 'package:pluto_ui/root_layout.dart';
 import 'package:pluto_ui/business_logic/all_cities_cubit/cubit/all_cities_cubit.dart';
 import 'package:pluto_ui/business_logic/apartment_cubit/cubit/apartment_cubit.dart';
 import 'package:pluto_ui/business_logic/post_apartment_cubit/cubit/post_apartment_cubit.dart';
@@ -350,27 +350,67 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     }
   }
 
+  // void _submitData() {
+  //   setState(() => validationErrors = {});
+
+  //   // Basic Local Validation before API call
+  //   if (selectedImage == null) {
+  //     setState(() => validationErrors['photo'] = ["يجب إضافة صورة الشقة"]);
+  //     return;
+  //   }
+  //   if (selectedCity == null) {
+  //     setState(() => validationErrors['city_id'] = ["يجب اختيار المدينة"]);
+  //     return;
+  //   }
+
+  //   final apartmentModel = PostApartmentModel(
+  //     cityId: selectedCity!.id,
+  //     area: int.tryParse(areaSizeController.text) ?? 0,
+  //     rooms: int.tryParse(roomsController.text) ?? 0,
+  //     description: descriptionController.text.trim(),
+  //     photo: selectedImage!.path,
+  //     price: int.tryParse(priceController.text) ?? 0,
+  //     floor: int.tryParse(floorController.text) ?? 0,
+  //   );
+
+  //   context.read<PostApartmentCubit>().createApartment(apartmentModel);
+  // }
+
+  // void _submitData() {
+  //   // Clear previous UI errors before the new request
+  //   setState(() => validationErrors = {});
+
+  //   final apartmentModel = PostApartmentModel(
+  //     cityId:
+  //         selectedCity?.id ??
+  //         0, // Pass 0 or null so backend triggers 'required'
+  //     area: int.tryParse(areaSizeController.text) ?? 0,
+  //     rooms: int.tryParse(roomsController.text) ?? 0,
+  //     description: descriptionController.text.trim(),
+  //     photo:
+  //         selectedImage?.path ??
+  //         "", // Pass empty so backend triggers 'required'
+  //     price: int.tryParse(priceController.text) ?? -1,
+  //     floor: int.tryParse(floorController.text) ?? -1,
+  //   );
+
+  //   context.read<PostApartmentCubit>().createApartment(apartmentModel);
+  // }
+
   void _submitData() {
+    // Clear previous UI errors before the new request
     setState(() => validationErrors = {});
 
-    // Basic Local Validation before API call
-    if (selectedImage == null) {
-      setState(() => validationErrors['photo'] = ["يجب إضافة صورة الشقة"]);
-      return;
-    }
-    if (selectedCity == null) {
-      setState(() => validationErrors['city_id'] = ["يجب اختيار المدينة"]);
-      return;
-    }
-
     final apartmentModel = PostApartmentModel(
-      cityId: selectedCity!.id,
-      area: int.tryParse(areaSizeController.text) ?? 0,
-      rooms: int.tryParse(roomsController.text) ?? 0,
+      cityId: selectedCity?.id, // Pass 0 or null so backend triggers 'required'
+      area: int.tryParse(areaSizeController.text),
+      rooms: int.tryParse(roomsController.text),
       description: descriptionController.text.trim(),
-      photo: selectedImage!.path,
-      price: int.tryParse(priceController.text) ?? 0,
-      floor: int.tryParse(floorController.text) ?? 0,
+      photo:
+          selectedImage?.path ??
+          "", // Pass empty so backend triggers 'required'
+      price: int.tryParse(priceController.text),
+      floor: int.tryParse(floorController.text),
     );
 
     context.read<PostApartmentCubit>().createApartment(apartmentModel);
@@ -402,15 +442,19 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               behavior: SnackBarBehavior.floating,
             ),
           );
-          //TODO Trigger refresh of home list and pop
-          //  context.read<ApartmentCubit>().fetchApartments();
+          //////
+          context.read<ApartmentCubit>().fetchApartments();
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
           // Navigator.of(context).pop(
           //   MaterialPageRoute(
           //     builder: (_) => RootLayout(isDark: false, onThemeChanged: (_) {}),
           //   ),
           // ); // Return after success
         } else if (state is PostApartmentError) {
-          if (state.error is Map) {
+          if (state.error is Map<String, dynamic>) {
+            print("SERVER VALIDATION ERRORS: ${state.error}");
             setState(() {
               validationErrors = (state.error as Map<String, dynamic>).map(
                 (key, value) => MapEntry(key, List<String>.from(value)),
@@ -452,55 +496,6 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              // Image Picker Section
-              // GestureDetector(
-              //   onTap: _pickImage,
-              //   child: Column(
-              //     children: [
-              //       Container(
-              //         height: 180,
-              //         width: double.infinity,
-              //         decoration: BoxDecoration(
-              //           color: cardColor,
-              //           borderRadius: BorderRadius.circular(15),
-              //           border: Border.all(
-              //             color: getErrorForField('photo') != null
-              //                 ? AppColors.kColorDanger
-              //                 : AppColors.bgActive(widget.isDark),
-              //             width: 2,
-              //           ),
-              //         ),
-              //         child: selectedImage == null
-              //             ? Center(
-              //                 child: Icon(
-              //                   Icons.add_a_photo,
-              //                   size: 50,
-              //                   color: fontColor.withOpacity(0.5),
-              //                 ),
-              //               )
-              //             : ClipRRect(
-              //                 borderRadius: BorderRadius.circular(13),
-              //                 child: Image.file(
-              //                   selectedImage!,
-              //                   fit: BoxFit.cover,
-              //                 ),
-              //               ),
-              //       ),
-              //       if (getErrorForField('photo') != null)
-              //         Padding(
-              //           padding: const EdgeInsets.only(top: 8),
-              //           child: Text(
-              //             getErrorForField('photo')!,
-              //             style: const TextStyle(
-              //               color: AppColors.kColorDanger,
-              //               fontSize: 12,
-              //             ),
-              //           ),
-              //         ),
-              //     ],
-              //   ),
-              // ),
-
               // Inside your Column in body:
               GestureDetector(
                 onTap: _pickImage,
@@ -682,38 +677,6 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
       ),
     );
   }
-
-  // InputDecoration _inputDecoration(
-  //   String label,
-  //   IconData icon,
-  //   String? errorText,
-  // ) {
-  //   return InputDecoration(
-  //     hintText: label,
-  //     errorText: errorText,
-  //     prefixIcon: Icon(icon, color: AppColors.kFontColorDark),
-  //     filled: true,
-  //     fillColor: AppColors.bgCard(widget.isDark),
-  //     hintStyle: TextStyle(color: AppColors.hintColor(widget.isDark)),
-  //     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-
-  //     // Default Border
-  //     border: OutlineInputBorder(
-  //       borderRadius: BorderRadius.circular(12),
-  //       borderSide: BorderSide.none,
-  //     ),
-
-  //     // Border when there is an ERROR
-  //     enabledBorder: OutlineInputBorder(
-  //       borderRadius: BorderRadius.circular(12),
-  //       borderSide: BorderSide(color: AppColors.bgActive(widget.isDark)),
-  //     ),
-  //     errorBorder: OutlineInputBorder(
-  //       borderRadius: BorderRadius.circular(12),
-  //       borderSide: const BorderSide(color: AppColors.kColorDanger, width: 1.5),
-  //     ),
-  //   );
-  // }
 
   InputDecoration _inputDecoration(
     String label,

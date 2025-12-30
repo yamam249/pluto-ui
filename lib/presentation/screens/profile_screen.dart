@@ -185,12 +185,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        backgroundColor: widget.isDark ? AppColors.bgCard(true) : Colors.white,
         title: const Text("Logout"),
         content: const Text("Are you sure you want to logout?"),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("Cancel"),
+            child: const Text(
+              "Cancel",
+              style: TextStyle(color: AppColors.kBgActive),
+            ),
           ),
           TextButton(
             onPressed: () {

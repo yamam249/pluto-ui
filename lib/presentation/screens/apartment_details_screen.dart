@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/apartment_details_cubit/cubit/apartment_details_cubit.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/models/apartment_model.dart';
+import 'package:pluto_ui/presentation/screens/booking_details_screen.dart';
 
 class ApartmentDetailsScreen extends StatefulWidget {
   final int apartmentId;
@@ -28,7 +29,13 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
       expandedHeight: 600,
       pinned: true,
       stretch: true,
-      backgroundColor: AppColors.kBgMain,
+      // backgroundColor: AppColors.kBgMain,
+
+      // 1. CHANGE THIS COLOR: This is the background color of the bar when collapsed
+      backgroundColor: AppColors.kBgCard,
+
+      // 2. OPTIONAL: Add an iconTheme to ensure the back arrow is visible
+      iconTheme: const IconThemeData(color: AppColors.kFontColorDark),
       flexibleSpace: FlexibleSpaceBar(
         // centerTitle: true,
         title: Text(
@@ -176,6 +183,56 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
             );
           }
           return const SizedBox.shrink();
+        },
+      ),
+
+      // --- ADD THIS SECTION ---
+      bottomNavigationBar: BlocBuilder<ApartmentDetailsCubit, ApartmentDetailsState>(
+        builder: (context, state) {
+          if (state is ApartmentDetailsLoaded) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: AppColors.kBgMain, // Or any background color
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.kFontColorDark,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  // Navigate to Booking Details
+                  // Replace 'BookingDetailsScreen' with your actual class name
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          BookingDetailsScreen(apartment: state.apartment),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "Book Now",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            );
+          }
+          return const SizedBox.shrink(); // Hide button while loading or error
         },
       ),
     );

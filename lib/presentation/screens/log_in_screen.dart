@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pluto_ui/app_router.dart';
+import 'package:pluto_ui/root_layout.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/login_cubit/cubit/login_cubit.dart';
@@ -74,6 +74,10 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state is LoginSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
+              behavior: SnackBarBehavior.floating,
+
+              backgroundColor: AppColors.kColorSuccess,
+
               content: Text(
                 ' successful log in ✅',
                 textAlign: TextAlign.center,
@@ -94,6 +98,10 @@ class _LoginScreenState extends State<LoginScreen> {
           });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
+              behavior: SnackBarBehavior.floating,
+
+              backgroundColor: AppColors.kColorDanger,
+
               content: Text(
                 'correct the mistakes, please ⚠️ ',
                 textAlign: TextAlign.center,
@@ -105,12 +113,17 @@ class _LoginScreenState extends State<LoginScreen> {
         else if (state is LoginFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              behavior: SnackBarBehavior.floating,
+
+              backgroundColor: AppColors.kColorDanger,
+
               content: Text(
-                ' the log in have failed ❌ : ${state.errorMessage}',
+                ' the log in has failed ❌ ',
                 textAlign: TextAlign.center,
               ),
             ),
           );
+          print(state.errorMessage);
         }
       },
       child: Scaffold(
