@@ -8,7 +8,9 @@ class AppColors {
   static const Color kBgCard = Color(0xFFffffff); // pureWhite
   static const Color kBgActive = Color(0xFF7A859D); // slateBlue
   static const Color kColorSuccess = Color(0xFF10B981); // emeraldGreen
-  static const Color kColorDanger = Color(0xFFEF4444); // brightRed
+  static const Color kColorDanger = Color(0xFFEF4444);// brightRed
+  static const Color agreedColor = Color(0xFFA500);
+  static const Color rentColor = Color(0x0000FF);
   static const Color kPrimaryColor = kFontColorDark;
 
   // 2. الألوان الأساسية الجديدة (للتصميم الذي يدعم isDark)
