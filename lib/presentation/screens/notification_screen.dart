@@ -1,33 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
-import 'package:pluto_ui/data/models/apartment_model.dart';
-import 'package:pluto_ui/presentation/screens/rating_screen.dart';
-import 'package:pluto_ui/presentation/screens/rental_request.dart'; 
+import 'rental_request.dart';
 
-
-enum NotificationType { rating, newRequest }
+enum RequestStatus { pending, accepted, declined }
 
 class NotificationModel {
   final int id;
-  String title;
-  String body;
+  final int requestId;
+  final String title;
+  final String body;
   bool isRead;
-  final NotificationType type;
-  final int? apartmentId;
+  RequestStatus status;
+  bool hasUpdate;
+  final String? tenantName;
+  final String? oldDate;
+  final String? newDate;
 
   NotificationModel({
     required this.id,
+    required this.requestId,
     required this.title,
     required this.body,
     this.isRead = false,
-    required this.type,
-    this.apartmentId,
+    this.status = RequestStatus.pending,
+    this.hasUpdate = false,
+    this.tenantName,
+    this.oldDate,
+    this.newDate,
   });
 }
 
 class NotificationScreen extends StatefulWidget {
   final bool isDark;
-
   const NotificationScreen({super.key, required this.isDark});
 
   @override
@@ -35,168 +39,132 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  // قائمة الإشعارات
   final List<NotificationModel> notifications = [
     NotificationModel(
       id: 1,
-      title: "Rating Required",
-      body: "Please rate your experience at Apartment #456.",
-      type: NotificationType.rating,
-      apartmentId: 456,
+      requestId: 101,
+      title: "Damascus Villa Booking",
+      body: "Rental request from Ahmad Mohammad",
+      tenantName: "Ahmad Mohammad",
+      status: RequestStatus.accepted,
+      hasUpdate: true,
+      oldDate: "2024-04-18",
+      newDate: "2025-02-15",
     ),
     NotificationModel(
       id: 2,
-      title: "New Rental Request",
-      body: "Someone is interested in renting your apartment in Amman.",
-      type: NotificationType.newRequest,
-      isRead: false,
+      requestId: 102,
+      title: "New Request",
+      body: "Sara Hasan sent a booking request",
+      tenantName: "Sara Hasan",
+      status: RequestStatus.pending,
+      hasUpdate: false,
     ),
   ];
 
-  void _handleTap(int index) {
-    final notification = notifications[index];
-    
-    // تحديث حالة الإشعار إلى "مقروء"
-    setState(() {
-      notification.isRead = true;
-    });
-
-    // المنطق الخاص بالانتقال بناءً على نوع الإشعار
-    if (notification.type == NotificationType.rating && notification.apartmentId != null) {
-      // 1. الانتقال لواجهة التقييم
-      final ApartmentModel dummyApartment = ApartmentModel(
-        id: notification.apartmentId!,
-        governorate: 'Amman',
-        city: 'Jabal Al Weibdeh',
-        rate: 4.5,
-        photo: "https://via.placeholder.com/150",
-        price: '500',
-        area: 120,
-        rooms: 3,
-        floor: 2,
-        description: 'Great Place to stay',
-      );
-
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => RatingScreen(
-            isDark: widget.isDark,
-            apartmentModel: dummyApartment,
-          ),
-        ),
-      );
-    } 
-    else if (notification.type == NotificationType.newRequest) {
-      // 2. الانتقال لواجهة طلب الإيجار (RentalRequestScreen)
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => RentalRequestScreen(
-            isDark: widget.isDark,
-          ),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isDark = widget.isDark;
-    final bgColor = AppColors.bgMain(isDark);
-    final cardColor = AppColors.bgCard(isDark);
-    final fontColor = AppColors.fontColor(isDark);
+    final fontColor = AppColors.fontColor(widget.isDark);
+    final bgColor = AppColors.bgMain(widget.isDark);
 
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: cardColor,
+        title: Text("Notifications", style: TextStyle(color: fontColor, fontWeight: FontWeight.bold)),
+        backgroundColor: AppColors.bgCard(widget.isDark),
         elevation: 0,
         centerTitle: true,
-        title: Text(
-          "Notifications",
-          style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
-        ),
         iconTheme: IconThemeData(color: fontColor),
       ),
-      body: notifications.isEmpty 
+      body: notifications.isEmpty
           ? Center(child: Text("No notifications yet", style: TextStyle(color: fontColor)))
           : ListView.builder(
-              itemCount: notifications.length,
-              itemBuilder: (context, index) {
-                final notification = notifications[index];
-                return _buildNotificationCard(notification, cardColor, fontColor, isDark, index);
-              },
-            ),
+        padding: const EdgeInsets.all(16),
+        itemCount: notifications.length,
+        itemBuilder: (context, index) => _buildNotificationItem(notifications[index]),
+      ),
     );
   }
 
-  Widget _buildNotificationCard(NotificationModel notification, Color cardColor, Color fontColor, bool isDark, int index) {
-    final activeColor = AppColors.bgActive(isDark);
-    
-    IconData iconData;
-    Color iconColor;// تحديد الأيقونة واللون بناءً على النوع
-    switch (notification.type) {
-      case NotificationType.rating:
-        iconData = Icons.star_border;
-        iconColor = AppColors.kColorDanger;
-        break;
-      case NotificationType.newRequest:
-        iconData = Icons.description_outlined; 
-        iconColor = AppColors.primary(isDark);
-        break;
-    }
+  Widget _buildNotificationItem(NotificationModel item) {
+    final primary = AppColors.primary(widget.isDark);
+    final cardBg = AppColors.bgCard(widget.isDark);
+    final fontColor = AppColors.fontColor(widget.isDark);
+    final subFontColor = AppColors.subFontColor(widget.isDark);
+    final isAccepted = item.status == RequestStatus.accepted;
 
     return GestureDetector(
-      onTap: () => _handleTap(index),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: cardColor,
-          borderRadius: BorderRadius.circular(12),
-          // إظهار حدود ملونة إذا كان الإشعار غير مقروء
-          border: notification.isRead ? null : Border.all(color: activeColor, width: 1.5),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: iconColor.withOpacity(0.1),
-              child: Icon(iconData, color: iconColor, size: 24),
+      onTap: () {
+        setState(() => item.isRead = true);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RentalRequestScreen(
+              isDark: widget.isDark,
+              isEditRequest: item.hasUpdate,
+              isAlreadyAccepted: isAccepted,
+              tenantName: item.tenantName ?? "Guest",
+              oldDate: item.oldDate,
+              newDate: item.newDate,
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: cardBg,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(widget.isDark ? 0.2 : 0.05), blurRadius: 10)],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Stack(
                 children: [
-                  Text(
-                    notification.title,
-                    style: TextStyle(
-                      color: fontColor,
-                      fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
-                      fontSize: 16,
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: (isAccepted ? AppColors.kColorSuccess : primary).withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      isAccepted ? Icons.check_circle_outline : Icons.notifications_none,
+                      color: isAccepted ? AppColors.kColorSuccess : primary,
+                      size: 24,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    notification.body,
-                    style: TextStyle(
-                      color: fontColor.withOpacity(0.6),
-                      fontSize: 14,
+                  if (item.hasUpdate)
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: const BoxDecoration(color: Colors.orange, shape: BoxShape.circle),
+                        child: const Icon(Icons.edit, size: 12, color: Colors.white),
+                      ),
                     ),
-                  ),
                 ],
               ),
-            ),
-            // نقطة زرقاء صغيرة للإشعارات غير المقروءة
-            if (!notification.isRead)
-              Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: activeColor,
-                  shape: BoxShape.circle,
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(item.title, style: TextStyle(color: fontColor, fontWeight: item.isRead ? FontWeight.normal : FontWeight.bold, fontSize: 15)),
+                    const SizedBox(height: 4),
+                    Text(
+                      item.hasUpdate ? "Tenant requested a change" : item.body,
+                      style: TextStyle(color: subFontColor, fontSize: 13),
+                    ),
+                  ],
                 ),
               ),
-          ],
+              if (!item.isRead)
+                Container(width: 8, height: 8, decoration: BoxDecoration(color: primary, shape: BoxShape.circle)),
+            ],
+          ),
         ),
       ),
     );
