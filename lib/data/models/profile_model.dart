@@ -6,6 +6,7 @@ class ProfileModel {
   final String lastName;
   final String phone;
   final String birthDate;
+  final String balance;
   final String profileImage;
   final String idImage;
 
@@ -15,6 +16,7 @@ class ProfileModel {
     required this.lastName,
     required this.phone,
     required this.birthDate,
+    required this.balance,
     required this.profileImage,
     required this.idImage,
   });
@@ -40,6 +42,7 @@ class ProfileModel {
       lastName: json['last_name'],
       phone: json['phone'],
       birthDate: json['birth_date'],
+      balance: json['balance'],
       profileImage: json['profile_image'],
       idImage: json['id_image'],
     );
