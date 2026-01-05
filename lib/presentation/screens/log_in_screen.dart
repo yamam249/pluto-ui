@@ -3,8 +3,6 @@ import 'package:pluto_ui/root_layout.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/login_cubit/cubit/login_cubit.dart';
-import 'package:pluto_ui/presentation/screens/home_screen.dart';
-import 'package:pluto_ui/presentation/screens/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

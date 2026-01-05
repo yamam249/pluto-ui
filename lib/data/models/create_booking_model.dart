@@ -14,7 +14,6 @@ class CreateBookingModel {
   // Helper to format dates specifically for your API (d-M-yyyy)
   String _formatDate(DateTime date) => DateFormat('d-M-yyyy').format(date);
 
-  // Convert to Map for Dio's FormData
   Map<String, dynamic> toJson() {
     return {
       "apartment_id": apartmentId.toString(),

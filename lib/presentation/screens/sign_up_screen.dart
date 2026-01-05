@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/sign_up_cubit/cubit/sign_up_cubit.dart';
@@ -6,7 +5,6 @@ import 'package:pluto_ui/constants/app_colors.dart'; // ✅ تم الاستير�
 import 'package:pluto_ui/data/models/signup_request_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:pluto_ui/presentation/screens/home_screen.dart';
 import 'package:pluto_ui/presentation/screens/log_in_screen.dart';
 
 class SignUpScreen extends StatefulWidget {

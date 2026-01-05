@@ -1,12 +1,3 @@
-// import 'package:bloc/bloc.dart';
-// import 'package:equatable/equatable.dart';
-
-// part 'create_booking_state.dart';
-
-// class CreateBookingCubit extends Cubit<CreateBookingState> {
-//   CreateBookingCubit() : super(CreateBookingInitial());
-// }
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pluto_ui/data/models/create_booking_model.dart';

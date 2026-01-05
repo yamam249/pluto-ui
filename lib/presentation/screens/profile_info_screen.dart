@@ -68,43 +68,6 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  // Center(
-                  //   child: Stack(
-                  //     children: [
-                  //       Container(
-                  //         width: 110,
-                  //         height: 110,
-                  //         decoration: BoxDecoration(
-                  //           shape: BoxShape.circle,
-                  //           border: Border.all(color: primaryColor, width: 2),
-                  //           color: cardColor,
-                  //           image: DecorationImage(
-                  //             // 7. Use Dynamic Profile Image with IP replacement
-                  //             image: NetworkImage(profile.profileImageUrl),
-                  //             fit: BoxFit.cover,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Positioned(
-                  //         bottom: 5,
-                  //         right: 5,
-                  //         child: Container(
-                  //           padding: const EdgeInsets.all(4),
-                  //           decoration: const BoxDecoration(
-                  //             color: Colors.green,
-                  //             shape: BoxShape.circle,
-                  //           ),
-                  //           child: const Icon(
-                  //             Icons.check,
-                  //             color: Colors.white,
-                  //             size: 15,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-
                   // Inside ProfileLoaded state in your BlocBuilder
                   Center(
                     child: Stack(
@@ -275,7 +238,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
               ),
               const SizedBox(height: 5),
               Text(
-                "$balance JOD",
+                "$balance SYP",
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 22,

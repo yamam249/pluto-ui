@@ -99,15 +99,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     style: TextStyle(color: fontColor),
                   ),
                   const SizedBox(height: 16),
-                  // ElevatedButton(
-                  //   onPressed: () =>
-                  //       context.read<FavoriteCubit>().getFavorites(),
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: AppColors.bgActive(widget.isDark),
-                  //     foregroundColor: Colors.white,
-                  //   ),
-                  //   child: const Text("Retry"),
-                  // ),
                 ],
               ),
             );

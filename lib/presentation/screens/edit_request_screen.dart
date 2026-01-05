@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:pluto_ui/business_logic/update_booking_cubit/cubit/update_booking_cubit.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
+import 'package:pluto_ui/data/models/update_booking_request_model.dart';
 
 class EditRequestScreen extends StatefulWidget {
   final bool isDark;
+  final int bookingId;
   final String houseName;
   final String initialDate;
+  final String toDate;
 
   const EditRequestScreen({
     super.key,
     required this.isDark,
+    required this.bookingId,
     required this.houseName,
     required this.initialDate,
+    required this.toDate,
   });
 
   @override
@@ -18,121 +26,301 @@ class EditRequestScreen extends StatefulWidget {
 }
 
 class _EditRequestScreenState extends State<EditRequestScreen> {
-  late DateTime selectedDate;
+  DateTime? fromDate;
+  DateTime? toDate;
+  bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _parseDate();
-  }
+  // New: Validation errors map following your Login pattern
+  Map<String, List<String>> validationErrors = {};
 
-  void _parseDate() {
-    try {
-      selectedDate = DateTime.parse(widget.initialDate);
-      if (selectedDate.isBefore(DateTime.now())) {
-        selectedDate = DateTime.now();
-      }
-    } catch (e) {
-      selectedDate = DateTime.now();
+  final DateTime afterTomorrow = DateTime.now().add(const Duration(days: 2));
+
+  // Helper method to get specific error messages
+  String? getErrorForField(String fieldKey) {
+    if (validationErrors.containsKey(fieldKey) &&
+        validationErrors[fieldKey]!.isNotEmpty) {
+      return validationErrors[fieldKey]!.first;
     }
+    return null;
   }
 
-  Future<void> _pickDate(BuildContext context) async {
-    DateTime firstAllowedDate = selectedDate.isBefore(DateTime.now())
-        ? selectedDate
-        : DateTime.now().subtract(const Duration(days: 365));
+  Future<void> _selectDate(BuildContext context, bool isFromDate) async {
+    // Clear validation error when user interacts with picker
+    if (validationErrors.isNotEmpty) {
+      setState(() => validationErrors = {});
+    }
+
+    // 1. Logic for 'From' Date
+    // Must be at least 'afterTomorrow'
+    DateTime firstDate;
+    DateTime initialDate;
+
+    if (isFromDate) {
+      firstDate = afterTomorrow;
+      initialDate = fromDate ?? afterTomorrow;
+    } else {
+      // 2. Logic for 'To' Date
+      // Must be at least the selected 'fromDate', otherwise 'afterTomorrow'
+      firstDate = fromDate ?? afterTomorrow;
+      initialDate = toDate ?? firstDate;
+    }
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: DateTime(2070),
       builder: (context, child) {
         return Theme(
-          data: widget.isDark ? ThemeData.dark() : ThemeData.light(),
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.kFontColorDark,
+              onPrimary: AppColors.kFontColorLight,
+              onSurface: AppColors.kFontColorDark,
+            ),
+          ),
           child: child!,
         );
       },
     );
 
-    if (picked != null && picked != selectedDate) {
+    if (picked != null) {
       setState(() {
-        selectedDate = picked;
+        if (isFromDate) {
+          fromDate = picked;
+          if (toDate != null && toDate!.isBefore(fromDate!)) {
+            toDate = null;
+          }
+        } else {
+          toDate = picked;
+        }
       });
     }
   }
 
+  void _submitBooking() {
+    if (fromDate == null || toDate == null) return;
+
+    final requestModel = UpdateBookingRequestModel(
+      newFromDate: DateFormat('dd-MM-yyyy').format(fromDate!),
+      newToDate: DateFormat('dd-MM-yyyy').format(toDate!),
+    );
+
+    context.read<UpdateBookingCubit>().submitUpdate(
+      requestModel,
+      widget.bookingId,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bgColor = AppColors.bgMain(widget.isDark);
-    final cardColor = AppColors.bgCard(widget.isDark);
-    final fontColor = AppColors.fontColor(widget.isDark);
-    final primary = AppColors.primary(widget.isDark);
+    return BlocListener<UpdateBookingCubit, UpdateBookingState>(
+      listener: (context, state) {
+        setState(() {
+          _isLoading = state is UpdateBookingLoading;
+        });
 
-    return Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
-        title: const Text("Edit Request"),
-        backgroundColor: cardColor,
-        iconTheme: IconThemeData(color: fontColor),
-        titleTextStyle: TextStyle(color: fontColor, fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Updating duration for:", style: TextStyle(color: fontColor.withOpacity(0.6))),
-            const SizedBox(height: 8),
-            Text(widget.houseName, style: TextStyle(color: fontColor, fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 40),
-
-            Text("Tap to change date:", style: TextStyle(color: fontColor, fontWeight: FontWeight.w500)),
-            const SizedBox(height: 12),
-
-            InkWell(
-              onTap: () => _pickDate(context),
-              child: Container(
+        if (state is UpdateBookingSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: AppColors.kColorSuccess,
+              content: Text(
+                'Request added successfully ✅',
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+          Navigator.pop(context);
+        } else if (state is UpdateBookingValidationError) {
+          setState(() {
+            validationErrors = state.errors;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: AppColors.kColorDanger,
+              content: Text(
+                'Please correct the date errors ⚠️',
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        } else if (state is UpdateBookingFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: AppColors.kColorDanger,
+              content: Text('${state.error} ❌', textAlign: TextAlign.center),
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.kFontColorLight,
+        appBar: AppBar(
+          title: const Text("Edit Request"),
+          backgroundColor: AppColors.kFontColorLight,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: AppColors.kFontColorDark),
+          titleTextStyle: const TextStyle(
+            color: AppColors.kFontColorDark,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: cardColor,
+                  color: AppColors.kBgCard.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: primary.withOpacity(0.5)),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: const Row(
                   children: [
-                    Text(
-                      "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}",
-                      style: TextStyle(color: fontColor, fontSize: 18, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Text(
+                        "Please select the new duration of your reservation ",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: AppColors.kFontColorDark,
+                        ),
+                      ),
                     ),
-                    Icon(Icons.calendar_today, color: primary),
                   ],
                 ),
               ),
-            ),
+              const SizedBox(height: 20),
 
-            const Spacer(),
-
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Rental duration updated successfully!")),
-                  );
-                },
-                child: const Text("Save Changes", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+              // Modified Styled From Date with Error handling
+              buildStyledDatePicker(
+                label: "From Date",
+                selectedDate: fromDate,
+                errorText: getErrorForField('new_from_date'),
+                onTap: () => _selectDate(context, true),
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+
+              // Modified Styled To Date with Error handling
+              buildStyledDatePicker(
+                label: "To Date",
+                selectedDate: toDate,
+                errorText: getErrorForField('new_to_date'),
+                onTap: () => _selectDate(context, false),
+              ),
+
+              const Spacer(),
+
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.kFontColorDark,
+                  minimumSize: const Size(double.infinity, 60),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 0,
+                ),
+                onPressed:
+                    (fromDate == null ||
+                        toDate == null ||
+                        _isLoading ||
+                        toDate!.isBefore(fromDate!))
+                    ? null
+                    : _submitBooking,
+                child: _isLoading
+                    ? const CircularProgressIndicator(
+                        color: AppColors.kFontColorLight,
+                      )
+                    : const Text(
+                        "Confirm The Changes",
+                        style: TextStyle(
+                          color: AppColors.kFontColorLight,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  // --- UI Style Pattern for Validation Errors ---
+  Widget buildStyledDatePicker({
+    required String label,
+    required DateTime? selectedDate,
+    required VoidCallback onTap,
+    String? errorText,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: Text(
+            label,
+            style: const TextStyle(
+              color: AppColors.kFontColorDark,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            height: 65,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+              color: AppColors.kFontColorLight,
+              borderRadius: BorderRadius.circular(15),
+              // Show red border if there is an error
+              border: errorText != null
+                  ? Border.all(color: AppColors.kColorDanger, width: 1.5)
+                  : null,
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.calendar_month_outlined,
+                  color: AppColors.kFontColorDark,
+                  size: 28,
+                ),
+                const SizedBox(width: 15),
+                Text(
+                  selectedDate == null
+                      ? "select date"
+                      : DateFormat('dd-MM-yyyy').format(selectedDate),
+                  style: const TextStyle(
+                    color: AppColors.kFontColorDark,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        // Error Message UI Pattern
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8, left: 8),
+            child: Text(
+              errorText,
+              style: const TextStyle(
+                color: AppColors.kColorDanger,
+                fontSize: 13,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -3,6 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pluto_ui/business_logic/create_booking_cubit/cubit/create_booking_cubit.dart';
+import 'package:pluto_ui/business_logic/history_cubit/cubit/history_cubit.dart';
+import 'package:pluto_ui/business_logic/rating_cubit/cubit/rating_cubit.dart';
+import 'package:pluto_ui/business_logic/registrations_cubit/cubit/registrations_cubit.dart';
+import 'package:pluto_ui/business_logic/update_booking_cubit/cubit/update_booking_cubit.dart';
+import 'package:pluto_ui/business_logic/update_registrations_cubit/cubit/update_registrations_cubit.dart';
 
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/repositories/booking_repo.dart';
@@ -137,6 +142,21 @@ class PlutoApp extends StatelessWidget {
         BlocProvider<CreateBookingCubit>(
           create: (context) => CreateBookingCubit(bookingRepo),
         ),
+        BlocProvider<HistoryCubit>(
+          create: (context) => HistoryCubit(bookingRepo),
+        ),
+        BlocProvider<RatingCubit>(
+          create: (context) => RatingCubit(apartmentRepo),
+        ),
+        BlocProvider<UpdateBookingCubit>(
+          create: (context) => UpdateBookingCubit(bookingRepo),
+        ),
+        BlocProvider<RegistrationsCubit>(
+          create: (context) => RegistrationsCubit(bookingRepo),
+        ),
+        BlocProvider<UpdateRegistrationsCubit>(
+          create: (context) => UpdateRegistrationsCubit(bookingRepo),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
@@ -223,6 +243,53 @@ class PlutoApp extends StatelessWidget {
                       context,
                       (state as CreateBookingError).message,
                       () {}, // No retry needed for booking usually, or add your logic
+                    ),
+                  ),
+                  BlocListener<HistoryCubit, HistoryState>(
+                    listenWhen: (p, c) => c is HistoryError,
+                    listener: (context, state) => _showErrorSnackBar(
+                      context,
+                      (state as HistoryError).message,
+                      () => context.read<HistoryCubit>().fetchHistory(),
+                    ),
+                  ),
+                  BlocListener<RatingCubit, RatingState>(
+                    listenWhen: (p, c) => c is RatingError,
+                    listener: (context, state) => _showErrorSnackBar(
+                      context,
+                      (state as RatingError).message,
+                      () {}, // No specific retry logic needed here as the user can just click "Submit" again
+                    ),
+                  ),
+                  BlocListener<UpdateBookingCubit, UpdateBookingState>(
+                    listenWhen: (p, c) => c is UpdateBookingFailure,
+                    listener: (context, state) => _showErrorSnackBar(
+                      context,
+                      (state as UpdateBookingFailure).error,
+                      () {}, // You can add retry logic here if your Cubit supports it
+                    ),
+                  ),
+                  BlocListener<RegistrationsCubit, RegistrationsState>(
+                    listenWhen: (p, c) => c is RegistrationsError,
+                    listener: (context, state) => _showErrorSnackBar(
+                      context,
+                      (state as RegistrationsError).message,
+                      () => context
+                          .read<RegistrationsCubit>()
+                          .fetchRegistrations(),
+                    ),
+                  ),
+                  BlocListener<
+                    UpdateRegistrationsCubit,
+                    UpdateRegistrationsState
+                  >(
+                    listenWhen: (p, c) => c is UpdateRegistrationsError,
+                    listener: (context, state) => _showErrorSnackBar(
+                      context,
+                      (state as UpdateRegistrationsError).message,
+                      () => context
+                          .read<UpdateRegistrationsCubit>()
+                          .fetchUpdateRequests(),
                     ),
                   ),
                 ],

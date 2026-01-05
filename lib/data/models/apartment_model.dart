@@ -1,4 +1,5 @@
 import 'package:pluto_ui/constants/strings.dart';
+import 'package:pluto_ui/data/models/profile_model.dart';
 
 class ApartmentModel {
   // ----------------------------------------------------
@@ -21,7 +22,7 @@ class ApartmentModel {
   final int? rooms;
   final int? floor;
   final String? description;
-
+  // ProfileModel? profile;
   // ----------------------------------------------------
   // CONSTRUCTOR
   // ----------------------------------------------------
@@ -38,6 +39,7 @@ class ApartmentModel {
     this.rooms,
     this.floor,
     this.description,
+    // this.profile,
   });
 
   // ----------------------------------------------------
@@ -78,6 +80,7 @@ class ApartmentModel {
 
       // Description: Safely cast (it's often a string or null)
       description: json['description'] as String?,
+      // profile: ProfileModel.fromJson(json['profile']),
     );
   }
 

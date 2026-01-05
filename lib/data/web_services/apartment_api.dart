@@ -369,4 +369,45 @@ class ApartmentApi {
       rethrow;
     }
   }
+
+  Future<String> rateApartment(
+    String token,
+    int apartmentId,
+    double rating,
+  ) async {
+    try {
+      // Note: The endpoint is /apartments/{id}/ratings
+      final String rateEndpoint = '/apartments/$apartmentId/ratings';
+
+      Response response = await _dio.post(
+        rateEndpoint,
+        data: {
+          'rate': rating, // Matches $validated['rate'] in your PHP controller
+        },
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      if (response.statusCode == 200) {
+        return response.data['message'] ?? "Apartment rated successfully";
+      }
+
+      throw ApiException("Unexpected response from server.");
+    } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+
+      // Explicit handling for your required status codes
+      if (statusCode == 404) {
+        throw ApiException("Apartment not found.");
+      }
+      if (statusCode == 400) {
+        throw ApiException("Bad Request: Invalid rating data.");
+      }
+
+      // Reuse your existing global error handler
+      _handleDioError(e);
+      rethrow;
+    } catch (e) {
+      throw ApiException("An unexpected error occurred: ${e.toString()}");
+    }
+  }
 }

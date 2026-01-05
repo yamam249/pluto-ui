@@ -80,4 +80,10 @@ class ApartmentRepo {
     final authToken = await _getAuthToken();
     return _api.removeFavorite(authToken, apartmentId);
   }
+
+  Future<String> rateApartment(int apartmentId, double rating) async {
+    final authToken = await _getAuthToken();
+
+    return _api.rateApartment(authToken, apartmentId, rating);
+  }
 }

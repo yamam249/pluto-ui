@@ -1,5 +1,3 @@
-// File: lib/business_logic/sign_up_cubit/sign_up_state.dart
-
 part of 'sign_up_cubit.dart';
 
 @immutable

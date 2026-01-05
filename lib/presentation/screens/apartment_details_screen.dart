@@ -142,7 +142,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                           ),
                           buildDivider(200),
                           apartmentInfo(
-                            'Price : ',
+                            'Price(SYP) : ',
                             apartmentModel.price.toString(),
                           ),
                           buildDivider(100),

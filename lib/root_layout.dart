@@ -6,7 +6,7 @@ import 'package:pluto_ui/presentation/screens/favorites_page.dart';
 import 'package:pluto_ui/presentation/screens/profile_screen.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/presentation/screens/add_property_screen.dart';
-import 'package:pluto_ui/presentation/screens/notification_screen.dart';
+import 'package:pluto_ui/presentation/screens/notifications_screen.dart';
 
 class RootLayout extends StatefulWidget {
   final bool isDark;
