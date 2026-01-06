@@ -382,9 +382,9 @@ class _RentalRequestScreenState extends State<RentalRequestScreen> {
     try {
       DateTime start = DateTime.parse(from);
       DateTime end = DateTime.parse(to);
-      int difference = end.difference(start).inDays;
+      int difference = end.difference(start).inDays + 1;
       // Ensure at least 1 night is charged if dates are same or for standard booking logic
-      return difference <= 0 ? 1 : difference;
+      return difference;
     } catch (e) {
       return 0;
     }

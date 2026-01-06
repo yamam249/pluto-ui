@@ -1,5 +1,4 @@
 import 'package:pluto_ui/constants/strings.dart';
-import 'package:pluto_ui/data/models/profile_model.dart';
 
 class ApartmentModel {
   // ----------------------------------------------------
@@ -32,7 +31,7 @@ class ApartmentModel {
     required this.city,
     required this.rate,
     required this.photo,
-    this.isFavorite = false, // Default value for local state
+    required this.isFavorite, // Default value for local state
     // Detail fields are optional/nullable in the constructor
     this.price,
     this.area,
@@ -65,7 +64,10 @@ class ApartmentModel {
       // Rate needs to be parsed as double, handling potential int inputs safely
       rate: double.parse(json['rate'].toString()),
       photo: json['photo'] as String,
-      isFavorite: false, // Always initialize local state to default
+      isFavorite: bool.parse(json['isFavourite'].toString()),
+      // isFavorite: json['isFavourite'] != null
+      //     ? bool.tryParse(json['isFavourite'].toString())
+      //     : null, // Always initialize local state to default
       // Detail-specific fields: Safely handle missing keys (which return null)
       price: json['price']?.toString(),
 

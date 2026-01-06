@@ -370,42 +370,158 @@ class ApartmentApi {
     }
   }
 
+  // Future<String> rateApartment(
+  //   String token,
+  //   int apartmentId,
+  //   double rating,
+  // ) async {
+  //   try {
+  //     final String rateEndpoint = '/apartments/$apartmentId/ratings';
+
+  //     Response response = await _dio.post(
+  //       rateEndpoint,
+  //       data: {'rate': rating},
+  //       options: Options(headers: {'Authorization': 'Bearer $token'}),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       return response.data['message'] ?? "Apartment rated successfully";
+  //     }
+
+  //     throw ApiException("Unexpected response from server.");
+  //   } on DioException catch (e) {
+  //     final statusCode = e.response?.statusCode;
+
+  //     // Explicit handling for your required status codes
+  //     if (statusCode == 404) {
+  //       throw ApiException("Apartment not found.");
+  //     }
+  //     if (statusCode == 400) {
+  //       throw ApiException("Bad Request: Invalid rating data.");
+  //       // if (response.statusCode == 400) {
+  //       // print(response.data['message'] as String);
+  //     }
+
+  //     // Reuse your existing global error handler
+  //     _handleDioError(e);
+  //     rethrow;
+  //   } catch (e) {
+  //     throw ApiException("An unexpected error occurred: ${e.toString()}");
+  //   }
+  // }
+
+  // Future<String> rateApartment(
+  //   String token,
+  //   int apartmentId,
+  //   String rating,
+  // ) async {
+  //   try {
+  //     final String rateEndpoint = '/apartments/$apartmentId/ratings';
+
+  //     Response response = await _dio.post(
+  //       rateEndpoint,
+  //       data: {'rate': rating},
+  //       options: Options(headers: {'Authorization': 'Bearer $token'}),
+  //     );
+
+  //     // If successful (200 OK or 201 Created)
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       // Return the success message from the backend
+  //       return response.data['message']?.toString() ?? "Apartment rated successfully";
+  //     }
+
+  //     throw ApiException("Unexpected response from server.");
+  //   } on DioException catch (e) {
+  //     // 1. Extract the message from the backend response body if it exists
+  //     // Most backends follow the format: { "message": "The actual error text" }
+  //     String errorMessage = "An error occurred. Please try again.";
+
+  //     if (e.response?.data != null && e.response?.data is Map) {
+  //       errorMessage = e.response?.data['message']?.toString() ?? errorMessage;
+  //     }
+
+  //     final statusCode = e.response?.statusCode;
+
+  //     // 2. Handle specific status codes using the message from the backend
+  //     if (statusCode == 404) {
+  //       throw ApiException(errorMessage); // Example: "Apartment not found."
+  //     }
+
+  //     if (statusCode == 400) {
+  //       throw ApiException(errorMessage); // Example: "You have already rated this apartment."
+  //     }
+
+  //     if (statusCode == 401) {
+  //       throw ApiException("Unauthorized: Please log in again.");
+  //     }
+
+  //     // 3. Fallback to global handler or the extracted message
+  //     _handleDioError(e);
+  //     throw ApiException(errorMessage);
+
+  //   } catch (e) {
+  //     // Catch-all for programming errors or unexpected types
+  //     throw ApiException("An unexpected error occurred: ${e.toString()}");
+  //   }
+  // }
+
   Future<String> rateApartment(
     String token,
     int apartmentId,
     double rating,
   ) async {
     try {
-      // Note: The endpoint is /apartments/{id}/ratings
       final String rateEndpoint = '/apartments/$apartmentId/ratings';
 
       Response response = await _dio.post(
         rateEndpoint,
-        data: {
-          'rate': rating, // Matches $validated['rate'] in your PHP controller
-        },
+        data: {'rate': rating},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return response.data['message'] ?? "Apartment rated successfully";
       }
 
       throw ApiException("Unexpected response from server.");
     } on DioException catch (e) {
+      // --- START ERROR MESSAGE EXTRACTION ---
+      String serverMessage = "An error occurred";
+
+      // Check if the server provided a response body
+      if (e.response?.data != null) {
+        // If the data is a Map (JSON), get the 'message' field
+        if (e.response?.data is Map) {
+          serverMessage =
+              e.response?.data['message']?.toString() ?? "Validation error";
+        } else {
+          // If the server returns a plain string instead of JSON
+          serverMessage = e.response?.data;
+        }
+      }
+      // --- END ERROR MESSAGE EXTRACTION ---
+
       final statusCode = e.response?.statusCode;
 
-      // Explicit handling for your required status codes
-      if (statusCode == 404) {
-        throw ApiException("Apartment not found.");
-      }
       if (statusCode == 400) {
-        throw ApiException("Bad Request: Invalid rating data.");
+        // This will now throw the ACTUAL message from your backend
+        // (e.g., "You have already rated this apartment")
+        throw ApiException(serverMessage);
       }
 
-      // Reuse your existing global error handler
+      if (statusCode == 404) {
+        throw ApiException(
+          serverMessage.contains("error")
+              ? "Apartment not found"
+              : serverMessage,
+        );
+      }
+
+      // Reuse your existing global error handler for timeouts, etc.
       _handleDioError(e);
-      rethrow;
+
+      // If _handleDioError doesn't throw, rethrow the server message
+      throw ApiException(serverMessage);
     } catch (e) {
       throw ApiException("An unexpected error occurred: ${e.toString()}");
     }
