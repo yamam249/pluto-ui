@@ -171,14 +171,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 );
               }
 
+              final sortedHistory = List.from(state.history)
+                ..sort((a, b) => b.id.compareTo(a.id));
+
               return ListView.builder(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 10,
                 ),
-                itemCount: historyList.length,
+                itemCount: sortedHistory.length,
                 itemBuilder: (context, i) {
-                  return _buildHistoryCard(historyList[i]);
+                  return _buildHistoryCard(sortedHistory[i]);
                 },
               );
             }

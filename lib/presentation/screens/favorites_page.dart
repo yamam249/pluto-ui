@@ -61,16 +61,19 @@ class _FavoritesPageState extends State<FavoritesPage> {
               );
             }
 
+            final sortedFavorites = List.from(state.favorites)
+              ..sort((a, b) => b.id.compareTo(a.id));
+
             return RefreshIndicator(
               color: AppColors.kFontColorDark,
               backgroundColor: AppColors.kBgMain,
               onRefresh: () => context.read<FavoriteCubit>().refreshFavorites(),
               child: ListView.builder(
                 padding: const EdgeInsets.all(20),
-                itemCount: favorites.length,
+                itemCount: sortedFavorites.length,
                 itemBuilder: (context, index) {
                   final apartment =
-                      favorites[index]; // Extract the specific apartment
+                      sortedFavorites[index]; // Extract the specific apartment
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),

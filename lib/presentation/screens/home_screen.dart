@@ -108,11 +108,14 @@ class HomeScreen extends StatelessWidget {
                 );
               }
 
+              final sortedApartments = List.from(state.apartments)
+                ..sort((a, b) => b.id.compareTo(a.id));
+
               return ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: state.apartments.length,
+                itemCount: sortedApartments.length,
                 itemBuilder: (context, index) {
-                  final apartment = state.apartments[index];
+                  final apartment = sortedApartments[index];
 
                   return InkWell(
                     onTap: () => Navigator.push(
