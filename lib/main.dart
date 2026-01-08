@@ -6,6 +6,7 @@ import 'package:pluto_ui/business_logic/create_booking_cubit/cubit/create_bookin
 import 'package:pluto_ui/business_logic/history_cubit/cubit/history_cubit.dart';
 import 'package:pluto_ui/business_logic/rating_cubit/cubit/rating_cubit.dart';
 import 'package:pluto_ui/business_logic/registrations_cubit/cubit/registrations_cubit.dart';
+import 'package:pluto_ui/business_logic/theme_cubit.dart';
 import 'package:pluto_ui/business_logic/update_booking_cubit/cubit/update_booking_cubit.dart';
 import 'package:pluto_ui/business_logic/update_registrations_cubit/cubit/update_registrations_cubit.dart';
 
@@ -38,6 +39,7 @@ import 'package:pluto_ui/business_logic/post_apartment_cubit/cubit/post_apartmen
 import 'package:pluto_ui/business_logic/profile_cubit/cubit/profile_cubit.dart';
 
 import 'package:pluto_ui/presentation/screens/log_in_screen.dart';
+import 'package:pluto_ui/presentation/screens/mode_screen.dart';
 import 'package:pluto_ui/presentation/screens/sign_up_screen.dart';
 import 'package:pluto_ui/root_layout.dart';
 import 'package:pluto_ui/presentation/screens/splash_screen.dart';
@@ -63,8 +65,8 @@ class PlutoApp extends StatelessWidget {
   ) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.kColorDanger,
+        content: Text(message, style: TextStyle(color: Colors.white)),
+        backgroundColor: AppTheme.kColorDanger,
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
           label: "RETRY",
@@ -157,143 +159,157 @@ class PlutoApp extends StatelessWidget {
         BlocProvider<UpdateRegistrationsCubit>(
           create: (context) => UpdateRegistrationsCubit(bookingRepo),
         ),
+        BlocProvider(create: (_) => ThemeCubit()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
         minTextAdapt: true,
         builder: (context, child) {
-          return MaterialApp(
-            navigatorKey: navigatorKey,
-            debugShowCheckedModeBanner: false,
-            initialRoute: '/',
-            routes: {
-              '/': (context) => const SplashScreen(isDark: false),
-              '/login': (context) => LoginScreen(),
-              '/signup': (context) => const SignUpScreen(),
-              '/app_router': (context) =>
-                  RootLayout(isDark: false, onThemeChanged: (_) {}),
-            },
-            builder: (context, widget) {
-              return MultiBlocListener(
-                listeners: [
-                  BlocListener<FavoriteCubit, FavoriteState>(
-                    listenWhen: (p, c) => c is FavoriteError,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as FavoriteError).message,
-                      () => context.read<FavoriteCubit>().retryLastAction(),
-                    ),
-                  ),
-                  BlocListener<ApartmentCubit, ApartmentState>(
-                    listenWhen: (p, c) => c is ApartmentError,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as ApartmentError).message,
-                      () => context.read<ApartmentCubit>().retryLastAction(),
-                    ),
-                  ),
-                  BlocListener<ApartmentDetailsCubit, ApartmentDetailsState>(
-                    listenWhen: (p, c) => c is ApartmentDetailsError,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as ApartmentDetailsError).message,
-                      () => context
-                          .read<ApartmentDetailsCubit>()
-                          .retryLastAction(),
-                    ),
-                  ),
-                  BlocListener<FilterCubit, FilterState>(
-                    listenWhen: (p, c) => c is FilterError,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as FilterError).message,
-                      () => context.read<FilterCubit>().retryLastAction(),
-                    ),
-                  ),
-                  BlocListener<ProfileCubit, ProfileState>(
-                    listenWhen: (p, c) => c is ProfileError,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as ProfileError).message,
-                      () => context.read<ProfileCubit>().retryLastAction(),
-                    ),
-                  ),
-                  BlocListener<LoginCubit, LoginState>(
-                    listener: (context, state) {
-                      if (state is LogoutSuccess) {
-                        navigatorKey.currentState?.pushNamedAndRemoveUntil(
-                          '/login',
-                          (route) => false,
-                        );
-                      }
-                    },
-                  ),
-                  BlocListener<PostApartmentCubit, PostApartmentState>(
-                    listenWhen: (p, c) => c is PostApartmentError,
-                    listener: (context, state) {
-                      final error = (state as PostApartmentError).error;
-                      if (error is String) {
-                        _showErrorSnackBar(context, error, () {});
-                      }
-                    },
-                  ),
-                  BlocListener<CreateBookingCubit, CreateBookingState>(
-                    listenWhen: (p, c) => c is CreateBookingError,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as CreateBookingError).message,
-                      () {}, // No retry needed for booking usually, or add your logic
-                    ),
-                  ),
-                  BlocListener<HistoryCubit, HistoryState>(
-                    listenWhen: (p, c) => c is HistoryError,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as HistoryError).message,
-                      () => context.read<HistoryCubit>().fetchHistory(),
-                    ),
-                  ),
-                  BlocListener<RatingCubit, RatingState>(
-                    listenWhen: (p, c) => c is RatingError,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as RatingError).message,
-                      () {}, // No specific retry logic needed here as the user can just click "Submit" again
-                    ),
-                  ),
-                  BlocListener<UpdateBookingCubit, UpdateBookingState>(
-                    listenWhen: (p, c) => c is UpdateBookingFailure,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as UpdateBookingFailure).error,
-                      () {}, // You can add retry logic here if your Cubit supports it
-                    ),
-                  ),
-                  BlocListener<RegistrationsCubit, RegistrationsState>(
-                    listenWhen: (p, c) => c is RegistrationsError,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as RegistrationsError).message,
-                      () => context
-                          .read<RegistrationsCubit>()
-                          .fetchRegistrations(),
-                    ),
-                  ),
-                  BlocListener<
-                    UpdateRegistrationsCubit,
-                    UpdateRegistrationsState
-                  >(
-                    listenWhen: (p, c) => c is UpdateRegistrationsError,
-                    listener: (context, state) => _showErrorSnackBar(
-                      context,
-                      (state as UpdateRegistrationsError).message,
-                      () => context
-                          .read<UpdateRegistrationsCubit>()
-                          .fetchUpdateRequests(),
-                    ),
-                  ),
-                ],
-                child: widget!,
+          return BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (context, mode) {
+              return MaterialApp(
+                navigatorKey: navigatorKey,
+                debugShowCheckedModeBanner: false,
+
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: mode, // This links the Cubit state to the UI
+
+                initialRoute: '/',
+                routes: {
+                  '/': (context) => SplashScreen(),
+                  '/login': (context) => LoginScreen(),
+                  '/signup': (context) => const SignUpScreen(),
+                  '/app_router': (context) => RootLayout(),
+                  '/mode': (context) => ModeScreen(),
+                },
+                builder: (context, widget) {
+                  return MultiBlocListener(
+                    listeners: [
+                      BlocListener<FavoriteCubit, FavoriteState>(
+                        listenWhen: (p, c) => c is FavoriteError,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as FavoriteError).message,
+                          () => context.read<FavoriteCubit>().retryLastAction(),
+                        ),
+                      ),
+                      BlocListener<ApartmentCubit, ApartmentState>(
+                        listenWhen: (p, c) => c is ApartmentError,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as ApartmentError).message,
+                          () =>
+                              context.read<ApartmentCubit>().retryLastAction(),
+                        ),
+                      ),
+                      BlocListener<
+                        ApartmentDetailsCubit,
+                        ApartmentDetailsState
+                      >(
+                        listenWhen: (p, c) => c is ApartmentDetailsError,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as ApartmentDetailsError).message,
+                          () => context
+                              .read<ApartmentDetailsCubit>()
+                              .retryLastAction(),
+                        ),
+                      ),
+                      BlocListener<FilterCubit, FilterState>(
+                        listenWhen: (p, c) => c is FilterError,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as FilterError).message,
+                          () => context.read<FilterCubit>().retryLastAction(),
+                        ),
+                      ),
+                      BlocListener<ProfileCubit, ProfileState>(
+                        listenWhen: (p, c) => c is ProfileError,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as ProfileError).message,
+                          () => context.read<ProfileCubit>().retryLastAction(),
+                        ),
+                      ),
+                      BlocListener<LoginCubit, LoginState>(
+                        listener: (context, state) {
+                          if (state is LogoutSuccess) {
+                            navigatorKey.currentState?.pushNamedAndRemoveUntil(
+                              '/login',
+                              (route) => false,
+                            );
+                          }
+                        },
+                      ),
+                      BlocListener<PostApartmentCubit, PostApartmentState>(
+                        listenWhen: (p, c) => c is PostApartmentError,
+                        listener: (context, state) {
+                          final error = (state as PostApartmentError).error;
+                          if (error is String) {
+                            _showErrorSnackBar(context, error, () {});
+                          }
+                        },
+                      ),
+                      BlocListener<CreateBookingCubit, CreateBookingState>(
+                        listenWhen: (p, c) => c is CreateBookingError,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as CreateBookingError).message,
+                          () {},
+                        ),
+                      ),
+                      BlocListener<HistoryCubit, HistoryState>(
+                        listenWhen: (p, c) => c is HistoryError,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as HistoryError).message,
+                          () => context.read<HistoryCubit>().fetchHistory(),
+                        ),
+                      ),
+                      BlocListener<RatingCubit, RatingState>(
+                        listenWhen: (p, c) => c is RatingError,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as RatingError).message,
+                          () {},
+                        ),
+                      ),
+                      BlocListener<UpdateBookingCubit, UpdateBookingState>(
+                        listenWhen: (p, c) => c is UpdateBookingFailure,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as UpdateBookingFailure).error,
+                          () {},
+                        ),
+                      ),
+                      BlocListener<RegistrationsCubit, RegistrationsState>(
+                        listenWhen: (p, c) => c is RegistrationsError,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as RegistrationsError).message,
+                          () => context
+                              .read<RegistrationsCubit>()
+                              .fetchRegistrations(),
+                        ),
+                      ),
+                      BlocListener<
+                        UpdateRegistrationsCubit,
+                        UpdateRegistrationsState
+                      >(
+                        listenWhen: (p, c) => c is UpdateRegistrationsError,
+                        listener: (context, state) => _showErrorSnackBar(
+                          context,
+                          (state as UpdateRegistrationsError).message,
+                          () => context
+                              .read<UpdateRegistrationsCubit>()
+                              .fetchUpdateRequests(),
+                        ),
+                      ),
+                    ],
+                    child: widget!,
+                  );
+                },
               );
             },
           );
