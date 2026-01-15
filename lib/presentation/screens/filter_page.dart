@@ -357,6 +357,7 @@ import 'package:pluto_ui/data/models/city_model.dart';
 import 'package:pluto_ui/data/models/governorate_model.dart';
 import 'package:pluto_ui/data/repositories/apartment_repo.dart';
 import 'package:pluto_ui/data/web_services/apartment_api.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class FilterPage extends StatefulWidget {
   // 🚨 Removed isDark parameter
@@ -424,7 +425,7 @@ class _FilterPageState extends State<FilterPage> {
           elevation: 0,
           centerTitle: true,
           title: Text(
-            "Filters",
+            "Filters".tr(),
             style: TextStyle(
               color: fontColor,
               fontSize: 22,
@@ -438,7 +439,7 @@ class _FilterPageState extends State<FilterPage> {
           child: ListView(
             children: [
               Text(
-                "Governorate",
+                "Governorate".tr(),
                 style: TextStyle(
                   color: fontColor,
                   fontSize: 18,
@@ -468,7 +469,7 @@ class _FilterPageState extends State<FilterPage> {
 
                   return DropdownButtonFormField<GovernorateModel>(
                     dropdownColor: cardColor,
-                    decoration: inputDec("Select governorate"),
+                    decoration: inputDec("Select governorate".tr()),
                     value: selectedGovernorate,
                     alignment: Alignment.center,
                     items: govsToShow.map((gov) {
@@ -496,7 +497,7 @@ class _FilterPageState extends State<FilterPage> {
               ),
               const SizedBox(height: 20),
               Text(
-                "City",
+                "City".tr(),
                 style: TextStyle(
                   color: fontColor,
                   fontSize: 18,
@@ -515,11 +516,11 @@ class _FilterPageState extends State<FilterPage> {
                   final bool noCitiesFound =
                       state is FilterCitiesLoaded && currentCities.isEmpty;
 
-                  String hintText = "Select city";
+                  String hintText = "Select city".tr();
                   if (selectedGovernorate == null) {
-                    hintText = "Select a governorate first";
+                    hintText = "Select a governorate first".tr();
                   } else if (noCitiesFound) {
-                    hintText = "No cities found";
+                    hintText = "No cities found".tr();
                   }
 
                   return Column(
@@ -561,7 +562,7 @@ class _FilterPageState extends State<FilterPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0, left: 4.0),
                           child: Text(
-                            "We couldn't find any cities for ${selectedGovernorate?.name}.",
+                            "We couldn't find any cities for ${selectedGovernorate?.name}.".tr(),
                             style: TextStyle(
                               color: AppTheme.kColorDanger,
                               fontSize: 13,
@@ -575,30 +576,30 @@ class _FilterPageState extends State<FilterPage> {
               ),
 
               const SizedBox(height: 20),
-              _buildSectionTitle("Price", fontColor),
+              _buildSectionTitle("Price".tr(), fontColor),
               const SizedBox(height: 10),
               TextField(
                 controller: priceController,
                 keyboardType: TextInputType.number,
-                decoration: inputDec("Enter price"),
+                decoration: inputDec("Enter price".tr()),
                 style: TextStyle(color: fontColor),
               ),
               const SizedBox(height: 20),
-              _buildSectionTitle("Area Size (m²)", fontColor),
+              _buildSectionTitle("Area Size (m²)".tr(), fontColor),
               const SizedBox(height: 10),
               TextField(
                 controller: areaSizeController,
                 keyboardType: TextInputType.number,
-                decoration: inputDec("Enter area size"),
+                decoration: inputDec("Enter area size".tr().tr()),
                 style: TextStyle(color: fontColor),
               ),
               const SizedBox(height: 20),
-              _buildSectionTitle("Rooms", fontColor),
+              _buildSectionTitle("Rooms".tr(), fontColor),
               const SizedBox(height: 10),
               TextField(
                 controller: roomsController,
                 keyboardType: TextInputType.number,
-                decoration: inputDec("Enter number of rooms"),
+                decoration: inputDec("Enter number of rooms".tr()),
                 style: TextStyle(color: fontColor),
               ),
               const SizedBox(height: 30),
@@ -613,7 +614,7 @@ class _FilterPageState extends State<FilterPage> {
                 ),
                 onPressed: _resetFilters,
                 child: Text(
-                  "Clear All",
+                  "Clear All".tr(),
                   style: TextStyle(
                     color: theme.primaryColor,
                     fontSize: 18,
@@ -644,8 +645,8 @@ class _FilterPageState extends State<FilterPage> {
                   };
                   Navigator.pop(context, filterResult);
                 },
-                child: const Text(
-                  "Apply Filters",
+                child:  Text(
+                  "Apply Filters".tr(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,

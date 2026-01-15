@@ -34,6 +34,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LanguageScreen extends StatelessWidget {
   const LanguageScreen({super.key});
@@ -51,7 +52,7 @@ class LanguageScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Language",
+          "Language".tr(),
           style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
         ),
         backgroundColor: theme.cardColor,
@@ -63,18 +64,18 @@ class LanguageScreen extends StatelessWidget {
           children: [
             _buildLanguageItem(
               context: context,
-              title: "English",
+              title: "English".tr(),
               theme: theme,
               fontColor: fontColor,
-              isSelected: true,
+              isSelected: context.locale.languageCode == 'en',
             ),
             const Divider(height: 1),
             _buildLanguageItem(
               context: context,
-              title: "Arabic",
+              title: "Arabic".tr(),
               theme: theme,
               fontColor: fontColor,
-              isSelected: false,
+              isSelected: context.locale.languageCode == 'ar',
             ),
           ],
         ),
@@ -104,7 +105,12 @@ class LanguageScreen extends StatelessWidget {
       trailing: isSelected
           ? Icon(Icons.check_circle, color: theme.primaryColor)
           : null,
-      onTap: () {
+      onTap: () async{
+         if (title == "English" ) {
+    await context.setLocale(const Locale('en'));
+  } else {
+    await context.setLocale(const Locale('ar'));
+  }
         // Handle language change logic here
       },
     );

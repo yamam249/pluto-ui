@@ -317,6 +317,8 @@ import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/root_layout.dart';
 import 'package:pluto_ui/business_logic/login_cubit/cubit/login_cubit.dart';
 import 'package:pluto_ui/presentation/screens/sign_up_screen.dart'; // Ensure correct import
+import 'package:easy_localization/easy_localization.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -377,10 +379,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (state is LoginSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               behavior: SnackBarBehavior.floating,
               backgroundColor: AppTheme.kColorSuccess,
-              content: Text('Successful log in ', textAlign: TextAlign.center),
+              content: Text('Successful log in '.tr(), textAlign: TextAlign.center),
             ),
           );
 
@@ -394,22 +396,22 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               behavior: SnackBarBehavior.floating,
               backgroundColor: AppTheme.kColorDanger,
               content: Text(
-                'Correct the mistakes, please ',
+                'Correct the mistakes, please '.tr(),
                 textAlign: TextAlign.center,
               ),
             ),
           );
         } else if (state is LoginFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+             SnackBar(
               behavior: SnackBarBehavior.floating,
               backgroundColor: AppTheme.kColorDanger,
               content: Text(
-                'The log in has failed ',
+                'The log in has failed '.tr(),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -445,7 +447,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    "Welcome Back",
+                    "Welcome Back".tr(),
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -457,7 +459,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   _buildTextField(
                     theme: theme,
                     controller: _phoneController,
-                    label: "Phone Number",
+                    label: "Phone Number".tr(),
                     icon: Icons.phone_android,
                     errorText: getErrorForField('phone'),
                     keyboardType: TextInputType.phone,
@@ -467,7 +469,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   _buildTextField(
                     theme: theme,
                     controller: _passwordController,
-                    label: "Password",
+                    label: "Password".tr(),
                     icon: Icons.lock,
                     errorText: getErrorForField('password'),
                     obscureText: true,
@@ -491,8 +493,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              "Login",
+                          :  Text(
+                              "Login".tr(),
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -507,7 +509,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an account? ",
+                        "Don't have an account? ".tr(),
                         style: TextStyle(color: fontColor?.withOpacity(0.7)),
                       ),
                       GestureDetector(
@@ -519,7 +521,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         child: Text(
-                          "Register Now",
+                          "Register Now".tr(),
                           style: TextStyle(
                             color: theme.primaryColor,
                             fontWeight: FontWeight.bold,

@@ -26,6 +26,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/theme_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ModeScreen extends StatelessWidget {
   const ModeScreen({super.key});
@@ -47,15 +48,15 @@ class ModeScreen extends StatelessWidget {
         backgroundColor: theme.cardColor,
         iconTheme: IconThemeData(color: fontColor),
         title: Text(
-          "Appearance",
+          "Appearance".tr(),
           style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsetsDirectional.all(20),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsetsDirectional.all(16),
           decoration: BoxDecoration(
             color: theme.cardColor,
             borderRadius: BorderRadius.circular(15),
@@ -71,7 +72,7 @@ class ModeScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 15),
                   Text(
-                    "Dark Mode",
+                    "Dark Mode".tr(),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,

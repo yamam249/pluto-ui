@@ -841,6 +841,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/update_registrations_cubit/cubit/update_registrations_cubit.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/models/update_registration_model.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 
 class UpdateDetailsForOwnerScreen extends StatefulWidget {
   final UpdateRegistrationModel updateRegistrationModel;
@@ -882,7 +884,7 @@ class _UpdateDetailsForOwnerScreenState
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Update Booking Request",
+          "Update Booking Request".tr(),
           style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
         ),
         iconTheme: IconThemeData(color: fontColor),
@@ -958,7 +960,7 @@ class _UpdateDetailsForOwnerScreenState
 
             const SizedBox(height: 20),
             _sectionTitle(
-              "The Original Rental Duration",
+              "The Original Rental Duration".tr(),
               fontColor ?? Colors.grey,
             ),
             _buildCard(
@@ -967,7 +969,7 @@ class _UpdateDetailsForOwnerScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _dateBox(
-                    "From Date",
+                    "From Date".tr(),
                     widget.updateRegistrationModel.booking.fromDate,
                     primaryColor,
                   ),
@@ -977,7 +979,7 @@ class _UpdateDetailsForOwnerScreenState
                     size: 20,
                   ),
                   _dateBox(
-                    "To Date",
+                    "To Date".tr(),
                     widget.updateRegistrationModel.booking.toDate,
                     primaryColor,
                   ),
@@ -985,7 +987,7 @@ class _UpdateDetailsForOwnerScreenState
               ),
             ),
 
-            _sectionTitle("Requested New Duration", Colors.orange),
+            _sectionTitle("Requested New Duration".tr(), Colors.orange),
             _buildCard(
               isDark
                   ? Colors.orange.withOpacity(0.1)
@@ -1003,13 +1005,13 @@ class _UpdateDetailsForOwnerScreenState
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _dateBox(
-                      "New From",
+                      "New From".tr(),
                       widget.updateRegistrationModel.newFromDate,
                       Colors.orange,
                     ),
                     Icon(Icons.calendar_month, color: Colors.orange, size: 20),
                     _dateBox(
-                      "New To",
+                      "New To".tr(),
                       widget.updateRegistrationModel.newToDate,
                       Colors.orange,
                     ),
@@ -1025,14 +1027,14 @@ class _UpdateDetailsForOwnerScreenState
               Column(
                 children: [
                   _infoRow(
-                    "Location",
+                    "Location".tr(),
                     "${widget.updateRegistrationModel.booking.apartment.governorate}, ${widget.updateRegistrationModel.booking.apartment.city}",
                     fontColor ?? Colors.black,
                     subFontColor ?? Colors.grey,
                   ),
                   Divider(height: 30, color: fontColor),
                   _infoRow(
-                    "Price per Night",
+                    "Price per Night".tr(),
                     "${widget.updateRegistrationModel.booking.apartment.price} SYP",
                     fontColor ?? Colors.black,
                     subFontColor ?? Colors.grey,
@@ -1040,7 +1042,7 @@ class _UpdateDetailsForOwnerScreenState
                   Divider(height: 30, color: fontColor),
                   // Calculations
                   _buildPriceRow(
-                    "Old Total",
+                    "Old Total".tr(),
                     widget.updateRegistrationModel.booking.fromDate,
                     widget.updateRegistrationModel.booking.toDate,
                     primaryColor,
@@ -1048,7 +1050,7 @@ class _UpdateDetailsForOwnerScreenState
                   ),
                   Divider(height: 30, color: fontColor),
                   _buildPriceRow(
-                    "New Total",
+                    "New Total".tr(),
                     widget.updateRegistrationModel.newFromDate,
                     widget.updateRegistrationModel.newToDate,
                     primaryColor,
@@ -1073,8 +1075,8 @@ class _UpdateDetailsForOwnerScreenState
                   SnackBar(
                     behavior: SnackBarBehavior.floating,
                     backgroundColor: successColor,
-                    content: const Text(
-                      "Action completed successfully",
+                    content:  Text(
+                      "Action completed successfully".tr(),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -1111,8 +1113,8 @@ class _UpdateDetailsForOwnerScreenState
             ) ??
             0);
     return _infoRow(
-      "$labelPrefix ($nights nights)",
-      "${totalPrice.toStringAsFixed(2)} SYP",
+      "$labelPrefix ($nights nights)".tr(),
+      "${totalPrice.toStringAsFixed(2)} SYP".tr(),
       highlightColor,
       subColor ?? Colors.grey,
     );
@@ -1152,8 +1154,8 @@ class _UpdateDetailsForOwnerScreenState
                       strokeWidth: 2,
                     ),
                   )
-                : const Text(
-                    "Accept",
+                :  Text(
+                    "Accept".tr(),
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -1189,7 +1191,7 @@ class _UpdateDetailsForOwnerScreenState
                     ),
                   )
                 : Text(
-                    "Decline",
+                    "Decline".tr(),
                     style: TextStyle(
                       color: errorColor,
                       fontWeight: FontWeight.bold,

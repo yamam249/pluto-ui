@@ -314,9 +314,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/profile_cubit/cubit/profile_cubit.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ProfileInfoScreen extends StatefulWidget {
-  // 🚨 Removed isDark parameter
   const ProfileInfoScreen({super.key});
 
   @override
@@ -330,13 +330,308 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
     context.read<ProfileCubit>().fetchProfile();
   }
 
+  //   @override
+  //   Widget build(BuildContext context) {
+  //     final theme = Theme.of(context);
+  //     final bgColor = theme.scaffoldBackgroundColor;
+  //     final cardColor = theme.cardColor;
+  //     final fontColor = Theme.of(context).brightness == Brightness.light
+  //         ? Theme.of(context).primaryColor
+  //         : Colors.white;
+  //     final primaryColor = theme.primaryColor;
+  //     final isDarkMode = theme.brightness == Brightness.dark;
+
+  //     return Scaffold(
+  //       backgroundColor: bgColor,
+  //       appBar: AppBar(
+  //         title: Text(
+  //           "Profile Info".tr(),
+  //           style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
+  //         ),
+  //         backgroundColor: cardColor,
+  //         elevation: 0,
+  //         centerTitle: true,
+  //         iconTheme: IconThemeData(color: fontColor),
+  //       ),
+  //       body: RefreshIndicator(
+  //         color: theme.primaryColor,
+  //         backgroundColor: theme.cardColor,
+  //         onRefresh: () async {
+  //           await context.read<ProfileCubit>().fetchProfile();
+  //         },
+  //         child: BlocBuilder<ProfileCubit, ProfileState>(
+  //           builder: (context, state) {
+  //             if (state is ProfileLoading) {
+  //               return Center(
+  //                 child: CircularProgressIndicator(color: primaryColor),
+  //               );
+  //             } else if (state is ProfileError) {
+  //               print(state.message);
+
+  // <<<<<<< HEAD
+  //               return Center(
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   children: [
+  //                     Icon(
+  //                       Icons.error_outline,
+  //                       size: 60,
+  //                       color: AppTheme.kColorDanger,
+  //                     ),
+  //                     const SizedBox(height: 16),
+  //                   ],
+  //                 ),
+  //               );
+  //             } else if (state is ProfileLoaded) {
+  //               final profile = state.profile;
+
+  //               return SingleChildScrollView(
+  //                 padding: const EdgeInsets.all(20),
+  //                 child: Column(
+  //                   children: [
+  //                     Center(
+  //                       child: Stack(
+  //                         children: [
+  //                           Container(
+  //                             width: 110,
+  //                             height: 110,
+  //                             decoration: BoxDecoration(
+  //                               shape: BoxShape.circle,
+  //                               border: Border.all(color: primaryColor, width: 2),
+  //                               color: cardColor,
+  //                             ),
+  //                             child: ClipOval(
+  //                               child: Image.network(
+  //                                 profile.profileImageUrl,
+  //                                 fit: BoxFit.cover,
+  //                                 errorBuilder: (context, error, stackTrace) {
+  //                                   return Container(
+  //                                     color: cardColor,
+  //                                     child: Icon(
+  //                                       Icons.person,
+  //                                       size: 50,
+  //                                       color: fontColor?.withOpacity(0.5),
+  //                                     ),
+  //                                   );
+  //                                 },
+  //                                 loadingBuilder:
+  //                                     (context, child, loadingProgress) {
+  //                                       if (loadingProgress == null) return child;
+  //                                       return Center(
+  //                                         child: CircularProgressIndicator(
+  //                                           value:
+  //                                               loadingProgress
+  //                                                       .expectedTotalBytes !=
+  //                                                   null
+  //                                               ? loadingProgress
+  //                                                         .cumulativeBytesLoaded /
+  //                                                     loadingProgress
+  //                                                         .expectedTotalBytes!
+  //                                               : null,
+  //                                         ),
+  //                                       );
+  //                                     },
+  //                               ),
+  //                             ),
+  //                           ),
+  //                           const Positioned(
+  //                             bottom: 5,
+  //                             right: 5,
+  //                             child: CircleAvatar(
+  //                               radius: 12,
+  //                               backgroundColor: Colors.green,
+  //                               child: Icon(
+  //                                 Icons.check,
+  //                                 color: Colors.white,
+  //                                 size: 15,
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 25),
+  //                     _buildWalletCard(profile.balance, primaryColor),
+  //                     const SizedBox(height: 25),
+  //                     _sectionTitle("Personal Information", fontColor),
+  //                     _buildInfoCard(
+  //                       "First Name",
+  //                       profile.firstName,
+  //                       cardColor,
+  //                       fontColor,
+  //                       isDarkMode,
+  //                     ),
+  //                     _buildInfoCard(
+  //                       "Last Name",
+  //                       profile.lastName,
+  //                       cardColor,
+  //                       fontColor,
+  //                       isDarkMode,
+  //                     ),
+  //                     _buildInfoCard(
+  //                       "Phone",
+  //                       profile.phone,
+  //                       cardColor,
+  //                       fontColor,
+  //                       isDarkMode,
+  //                     ),
+  //                     _buildInfoCard(
+  //                       "Birthdate",
+  //                       profile.birthDate,
+  //                       cardColor,
+  //                       fontColor,
+  //                       isDarkMode,
+  //                     ),
+  //                     const SizedBox(height: 25),
+  //                     _sectionTitle("Identity Document", fontColor),
+  //                     ClipRRect(
+  //                       borderRadius: BorderRadius.circular(15),
+  //                       child: Image.network(
+  //                         profile.idImageUrl,
+  // =======
+  //             return SingleChildScrollView(
+  //               padding: const EdgeInsetsDirectional.all(20),
+  //               child: Column(
+  //                 children: [
+  //                   Center(
+  //                     child: Stack(
+  //                       children: [
+  //                         Container(
+  //                           width: 110,
+  //                           height: 110,
+  //                           decoration: BoxDecoration(
+  //                             shape: BoxShape.circle,
+  //                             border: Border.all(color: primaryColor, width: 2),
+  //                             color: cardColor,
+  //                           ),
+  //                           child: ClipOval(
+  //                             child: Image.network(
+  //                               profile.profileImageUrl,
+  //                               fit: BoxFit.cover,
+  //                               errorBuilder: (context, error, stackTrace) {
+  //                                 return Container(
+  //                                   color: cardColor,
+  //                                   child: Icon(
+  //                                     Icons.person,
+  //                                     size: 50,
+  //                                     color: fontColor?.withOpacity(0.5),
+  //                                   ),
+  //                                 );
+  //                               },
+  //                               loadingBuilder:
+  //                                   (context, child, loadingProgress) {
+  //                                     if (loadingProgress == null) return child;
+  //                                     return Center(
+  //                                       child: CircularProgressIndicator(
+  //                                         value:
+  //                                             loadingProgress
+  //                                                     .expectedTotalBytes !=
+  //                                                 null
+  //                                             ? loadingProgress
+  //                                                       .cumulativeBytesLoaded /
+  //                                                   loadingProgress
+  //                                                       .expectedTotalBytes!
+  //                                             : null,
+  //                                       ),
+  //                                     );
+  //                                   },
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         const PositionedDirectional(
+  //                           bottom: 5,
+  //                           end: 5,
+  //                           child: CircleAvatar(
+  //                             radius: 12,
+  //                             backgroundColor: Colors.green,
+  //                             child: Icon(
+  //                               Icons.check,
+  //                               color: Colors.white,
+  //                               size: 15,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                   const SizedBox(height: 25),
+  //                   _buildWalletCard(profile.balance, primaryColor),
+  //                   const SizedBox(height: 25),
+  //                   _sectionTitle("Personal Information".tr(), fontColor),
+  //                   _buildInfoCard(
+  //                     "First Name".tr(),
+  //                     profile.firstName,
+  //                     cardColor,
+  //                     fontColor,
+  //                     isDarkMode,
+  //                   ),
+  //                   _buildInfoCard(
+  //                     "Last Name".tr(),
+  //                     profile.lastName,
+  //                     cardColor,
+  //                     fontColor,
+  //                     isDarkMode,
+  //                   ),
+  //                   _buildInfoCard(
+  //                     "Phone".tr(),
+  //                     profile.phone,
+  //                     cardColor,
+  //                     fontColor,
+  //                     isDarkMode,
+  //                   ),
+  //                   _buildInfoCard(
+  //                     "Birthdate".tr(),
+  //                     profile.birthDate,
+  //                     cardColor,
+  //                     fontColor,
+  //                     isDarkMode,
+  //                   ),
+  //                   const SizedBox(height: 25),
+  //                   _sectionTitle("Identity Document".tr(), fontColor),
+  //                   ClipRRect(
+  //                     borderRadius: BorderRadius.circular(15),
+  //                     child: Image.network(
+  //                       profile.idImageUrl,
+  //                       height: 180,
+  //                       width: double.infinity,
+  //                       fit: BoxFit.cover,
+  //                       errorBuilder: (context, error, stackTrace) => Container(
+  // >>>>>>> 36316b7e7b925e177d8603b2c113707fed11f467
+  //                         height: 180,
+  //                         width: double.infinity,
+  //                         fit: BoxFit.cover,
+  //                         errorBuilder: (context, error, stackTrace) => Container(
+  //                           height: 180,
+  //                           color: cardColor,
+  //                           child: Center(
+  //                             child: Icon(
+  //                               Icons.broken_image,
+  //                               color: fontColor,
+  //                               size: 50,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 30),
+  //                   ],
+  //                 ),
+  //               );
+  //             }
+  //             return const SizedBox.shrink();
+  //           },
+  //         ),
+  //       ),
+  //     );
+  //   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bgColor = theme.scaffoldBackgroundColor;
     final cardColor = theme.cardColor;
-    final fontColor = Theme.of(context).brightness == Brightness.light
-        ? Theme.of(context).primaryColor
+    final fontColor = theme.brightness == Brightness.light
+        ? theme.primaryColor
         : Colors.white;
     final primaryColor = theme.primaryColor;
     final isDarkMode = theme.brightness == Brightness.dark;
@@ -345,7 +640,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
       backgroundColor: bgColor,
       appBar: AppBar(
         title: Text(
-          "Profile Info",
+          "Profile Info".tr(),
           style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
         ),
         backgroundColor: cardColor,
@@ -354,8 +649,8 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
         iconTheme: IconThemeData(color: fontColor),
       ),
       body: RefreshIndicator(
-        color: theme.primaryColor,
-        backgroundColor: theme.cardColor,
+        color: primaryColor,
+        backgroundColor: cardColor,
         onRefresh: () async {
           await context.read<ProfileCubit>().fetchProfile();
         },
@@ -366,8 +661,6 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                 child: CircularProgressIndicator(color: primaryColor),
               );
             } else if (state is ProfileError) {
-              print(state.message);
-
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -378,6 +671,10 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                       color: AppTheme.kColorDanger,
                     ),
                     const SizedBox(height: 16),
+                    Text(
+                      state.message.tr(),
+                      style: TextStyle(color: fontColor),
+                    ),
                   ],
                 ),
               );
@@ -385,6 +682,8 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
               final profile = state.profile;
 
               return SingleChildScrollView(
+                physics:
+                    const AlwaysScrollableScrollPhysics(), // Important for RefreshIndicator
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
@@ -403,40 +702,23 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                               child: Image.network(
                                 profile.profileImageUrl,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: cardColor,
-                                    child: Icon(
-                                      Icons.person,
-                                      size: 50,
-                                      color: fontColor?.withOpacity(0.5),
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                      color: cardColor,
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 50,
+                                        color: fontColor.withOpacity(0.5),
+                                      ),
                                     ),
-                                  );
-                                },
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value:
-                                              loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                              : null,
-                                        ),
-                                      );
-                                    },
                               ),
                             ),
                           ),
-                          const Positioned(
+                          PositionedDirectional(
+                            // Use Directional for RTL support
                             bottom: 5,
-                            right: 5,
-                            child: CircleAvatar(
+                            end: 5,
+                            child: const CircleAvatar(
                               radius: 12,
                               backgroundColor: Colors.green,
                               child: Icon(
@@ -452,37 +734,37 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     const SizedBox(height: 25),
                     _buildWalletCard(profile.balance, primaryColor),
                     const SizedBox(height: 25),
-                    _sectionTitle("Personal Information", fontColor),
+                    _sectionTitle("Personal Information".tr(), fontColor),
                     _buildInfoCard(
-                      "First Name",
+                      "First Name".tr(),
                       profile.firstName,
                       cardColor,
                       fontColor,
                       isDarkMode,
                     ),
                     _buildInfoCard(
-                      "Last Name",
+                      "Last Name".tr(),
                       profile.lastName,
                       cardColor,
                       fontColor,
                       isDarkMode,
                     ),
                     _buildInfoCard(
-                      "Phone",
+                      "Phone".tr(),
                       profile.phone,
                       cardColor,
                       fontColor,
                       isDarkMode,
                     ),
                     _buildInfoCard(
-                      "Birthdate",
+                      "Birthdate".tr(),
                       profile.birthDate,
                       cardColor,
                       fontColor,
                       isDarkMode,
                     ),
                     const SizedBox(height: 25),
-                    _sectionTitle("Identity Document", fontColor),
+                    _sectionTitle("Identity Document".tr(), fontColor),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Image.network(
@@ -518,7 +800,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   Widget _buildWalletCard(String balance, Color primaryColor) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsetsDirectional.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [primaryColor, primaryColor.withOpacity(0.8)],
@@ -538,8 +820,8 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Available Balance",
+              Text(
+                "Available Balance".tr(),
                 style: TextStyle(color: Colors.white70, fontSize: 13),
               ),
               const SizedBox(height: 5),
@@ -567,7 +849,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsetsDirectional.all(16),
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(15),

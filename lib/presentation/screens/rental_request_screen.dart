@@ -396,6 +396,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/registrations_cubit/cubit/registrations_cubit.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/models/registration_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RentalRequestScreen extends StatefulWidget {
   final RegistrationModel registration;
@@ -430,7 +431,7 @@ class _RentalRequestScreenState extends State<RentalRequestScreen> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Booking Request",
+          "Booking Request".tr(),
           style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
         ),
         iconTheme: IconThemeData(color: fontColor),
@@ -441,13 +442,13 @@ class _RentalRequestScreenState extends State<RentalRequestScreen> {
           children: [
             // Status Banner
             _statusBanner(
-              "Status: ${widget.registration.status.toUpperCase()}",
+              "Status: ${widget.registration.status.toUpperCase()}".tr(),
               widget.registration.status.toLowerCase() == 'accepted'
                   ? AppTheme.kColorSuccess
                   : primaryColor,
             ),
 
-            _sectionTitle("Tenant Information", fontColor),
+            _sectionTitle("Tenant Information".tr(), fontColor),
             _buildCard(
               cardColor,
               Row(
@@ -489,14 +490,14 @@ class _RentalRequestScreenState extends State<RentalRequestScreen> {
 
             const SizedBox(height: 20),
 
-            _sectionTitle("Rental duration", fontColor),
+            _sectionTitle("Rental duration".tr(), fontColor),
             _buildCard(
               cardColor,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _dateBox(
-                    "From Date",
+                    "From Date".tr(),
                     widget.registration.fromDate,
                     primaryColor,
                   ),
@@ -505,27 +506,27 @@ class _RentalRequestScreenState extends State<RentalRequestScreen> {
                     color: subFontColor,
                     size: 20,
                   ),
-                  _dateBox("To Date", widget.registration.toDate, primaryColor),
+                  _dateBox("To Date".tr(), widget.registration.toDate, primaryColor),
                 ],
               ),
             ),
 
             const SizedBox(height: 20),
 
-            _sectionTitle("Apartment Details", fontColor),
+            _sectionTitle("Apartment Details".tr(), fontColor),
             _buildCard(
               cardColor,
               Column(
                 children: [
                   _infoRow(
-                    "Location",
+                    "Location".tr(),
                     "${widget.registration.apartment.governorate}, ${widget.registration.apartment.city}",
                     fontColor,
                     subFontColor,
                   ),
                   Divider(height: 30, color: subFontColor),
                   _infoRow(
-                    "Price per Night",
+                    "Price per Night.tr()",
                     "${widget.registration.apartment.price} SYP",
                     fontColor,
                     subFontColor,
@@ -545,7 +546,7 @@ class _RentalRequestScreenState extends State<RentalRequestScreen> {
                               0);
 
                       return _infoRow(
-                        "Total Price ($nights nights)",
+                        "Total Price ($nights nights)".tr(),
                         "${totalPrice.toStringAsFixed(2)} SYP",
                         primaryColor,
                         subFontColor,
@@ -567,11 +568,11 @@ class _RentalRequestScreenState extends State<RentalRequestScreen> {
                   _isDeclining = false;
                 });
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                   SnackBar(
                     behavior: SnackBarBehavior.floating,
                     backgroundColor: AppTheme.kColorSuccess,
                     content: Text(
-                      "Action completed successfully",
+                      "Action completed successfully".tr(),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -608,7 +609,7 @@ class _RentalRequestScreenState extends State<RentalRequestScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: const Text("Close"),
+          child:  Text("Close".tr()),
         ),
       );
     }
@@ -641,8 +642,8 @@ class _RentalRequestScreenState extends State<RentalRequestScreen> {
                       strokeWidth: 2,
                     ),
                   )
-                : const Text(
-                    "Accept",
+                :  Text(
+                    "Accept".tr(),
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -678,7 +679,7 @@ class _RentalRequestScreenState extends State<RentalRequestScreen> {
                     ),
                   )
                 : Text(
-                    "Decline",
+                    "Decline".tr(),
                     style: TextStyle(
                       color: AppTheme.kColorDanger,
                       fontWeight: FontWeight.bold,

@@ -245,6 +245,7 @@ import 'package:pluto_ui/business_logic/apartment_details_cubit/cubit/apartment_
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/models/apartment_model.dart';
 import 'package:pluto_ui/presentation/screens/booking_details_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ApartmentDetailsScreen extends StatefulWidget {
   final int apartmentId;
@@ -495,8 +496,8 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                           ),
                         );
                       },
-                      child: const Text(
-                        "Book Now",
+                      child: Text(
+                        "Book Now".tr(),
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

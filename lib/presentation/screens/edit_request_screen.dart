@@ -331,6 +331,7 @@ import 'package:intl/intl.dart';
 import 'package:pluto_ui/business_logic/update_booking_cubit/cubit/update_booking_cubit.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/models/update_booking_request_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class EditRequestScreen extends StatefulWidget {
   final int bookingId;
@@ -447,11 +448,11 @@ class _EditRequestScreenState extends State<EditRequestScreen> {
 
         if (state is UpdateBookingSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+             SnackBar(
               behavior: SnackBarBehavior.floating,
               backgroundColor: AppTheme.kColorSuccess,
               content: Text(
-                'Request updated successfully ',
+                'Request updated successfully '.tr(),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -462,11 +463,11 @@ class _EditRequestScreenState extends State<EditRequestScreen> {
             validationErrors = state.errors;
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+             SnackBar(
               behavior: SnackBarBehavior.floating,
               backgroundColor: AppTheme.kColorDanger,
               content: Text(
-                'Please correct the date errors ',
+                'Please correct the date errors '.tr(),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -484,7 +485,7 @@ class _EditRequestScreenState extends State<EditRequestScreen> {
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
-          title: const Text("Edit Request"),
+          title:  Text("Edit Request".tr()),
           backgroundColor: theme.scaffoldBackgroundColor,
           elevation: 0,
           centerTitle: true,
@@ -510,7 +511,7 @@ class _EditRequestScreenState extends State<EditRequestScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        "Please select the new duration of your reservation for ${widget.houseName}",
+                        "Please select the new duration of your reservation for ${widget.houseName}".tr(),
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
@@ -524,7 +525,7 @@ class _EditRequestScreenState extends State<EditRequestScreen> {
               const SizedBox(height: 30),
 
               buildStyledDatePicker(
-                label: "From Date",
+                label: "From Date".tr(),
                 selectedDate: fromDate,
                 theme: theme,
                 errorText: getErrorForField('new_from_date'),
@@ -533,7 +534,7 @@ class _EditRequestScreenState extends State<EditRequestScreen> {
               const SizedBox(height: 20),
 
               buildStyledDatePicker(
-                label: "To Date",
+                label: "To Date".tr(),
                 selectedDate: toDate,
                 theme: theme,
                 errorText: getErrorForField('new_to_date'),
@@ -561,8 +562,8 @@ class _EditRequestScreenState extends State<EditRequestScreen> {
                     : _submitBooking,
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                        "Confirm The Changes",
+                    :  Text(
+                        "Confirm The Changes".tr(),
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -627,7 +628,7 @@ class _EditRequestScreenState extends State<EditRequestScreen> {
                 const SizedBox(width: 15),
                 Text(
                   selectedDate == null
-                      ? "Select date"
+                      ? "Select date".tr()
                       : DateFormat('dd-MM-yyyy').format(selectedDate),
                   style: TextStyle(
                     color: fontColor?.withOpacity(
