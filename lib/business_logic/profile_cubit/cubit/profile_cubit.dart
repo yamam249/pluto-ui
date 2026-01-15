@@ -10,11 +10,7 @@ part 'profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepo profileRepo;
 
-  // Stores the last function that failed to allow for a 'Retry' button in the UI
-
   ProfileCubit(this.profileRepo) : super(ProfileInitial());
-
-  /// Retries the last action that resulted in an error
 
   Future<void> fetchProfile() async {
     emit(ProfileLoading());

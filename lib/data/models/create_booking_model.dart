@@ -11,7 +11,7 @@ class CreateBookingModel {
     required this.toDate,
   });
 
-  // Helper to format dates specifically for your API (d-M-yyyy)
+  // Helper to format dates
   String _formatDate(DateTime date) => DateFormat('d-M-yyyy').format(date);
 
   Map<String, dynamic> toJson() {

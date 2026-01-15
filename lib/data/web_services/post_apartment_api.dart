@@ -9,7 +9,6 @@ class PostApartmentApi {
   factory PostApartmentApi() => _instance;
   PostApartmentApi._internal();
 
-  /// Creates FormData for the apartment request, including the photo file
   Future<FormData> _createFormData(PostApartmentModel apartment) async {
     final Map<String, dynamic> fields = {
       'city_id': apartment.cityId,
@@ -20,7 +19,6 @@ class PostApartmentApi {
       'floor': apartment.floor,
     };
 
-    // Process the photo path into a MultipartFile
     if (apartment.photo.isNotEmpty) {
       fields['photo'] = await MultipartFile.fromFile(
         apartment.photo,
@@ -31,7 +29,6 @@ class PostApartmentApi {
     return FormData.fromMap(fields);
   }
 
-  /// Sends the POST request to create a new apartment
   Future<dynamic> createApartment(
     PostApartmentModel apartment,
     String token,
@@ -45,7 +42,6 @@ class PostApartmentApi {
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
-      // Handle Success
       if (response.statusCode == 200 || response.statusCode == 201) {
         print(' Apartment created successfully.');
         return response.data;
@@ -73,7 +69,7 @@ class PostApartmentApi {
         return "unexpected error occurred $statusCode).";
       }
     } catch (e) {
-      print('🔥 General Exception: ${e.toString()}');
+      print(' General Exception: ${e.toString()}');
       if (e.toString().contains('File')) {
         return "error in reading photo file";
       }

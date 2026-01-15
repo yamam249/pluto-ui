@@ -1,5 +1,3 @@
-// File: lib/business_logic/sign_up_cubit/sign_up_cubit.dart
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pluto_ui/data/models/signup_request_model.dart';
@@ -19,24 +17,17 @@ class SignUpCubit extends Cubit<SignUpState> {
     final result = await signupRepo.createNewUser(user);
 
     if (result is SignupResponseModel) {
-      print('Cubit: التسجيل نجح، إصدار حالة SignUpSuccess');
+      print('Cubit: SignUpSuccess');
       emit(SignUpSuccess(result));
-
-      // حالة خطأ التحقق
     } else if (result is Map<String, dynamic>) {
-      print('Cubit: فشل التحقق (422)، إصدار حالة SignUpValidationError');
+      print('Cubit: SignUpValidationError');
       emit(SignUpValidationError(result));
-
-      // حالة الفشل العام (5xx أو خطأ شبكة)
     } else if (result is String) {
       print('Cubit: فشل عام/سيرفر، إصدار حالة SignUpFailure');
-      // نمرر رسالة الخطأ التي أرجعتها طبقة الـ API/Repo
       emit(SignUpFailure(result));
-
-      // حالة غير متوقعة
     } else {
-      print('Cubit: خطأ غير معروف في نوع النتيجة');
-      emit(SignUpFailure('حدث خطأ غير معروف في معالجة البيانات المرجعة.'));
+      print('Cubit: unknow error occurred');
+      emit(SignUpFailure('unknow error occurred while processing'));
     }
   }
 }

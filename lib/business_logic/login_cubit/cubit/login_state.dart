@@ -21,7 +21,6 @@ final class LoginFailure extends LoginState {
   LoginFailure(this.errorMessage);
 }
 
-// A state to signal the initial authentication check result
 final class AuthStatusChecked extends LoginState {
   final bool isLoggedIn;
   AuthStatusChecked(this.isLoggedIn);

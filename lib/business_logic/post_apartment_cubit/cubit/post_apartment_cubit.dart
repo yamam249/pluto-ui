@@ -19,14 +19,12 @@ class PostApartmentCubit extends Cubit<PostApartmentState> {
       if (result is String && result == "Apartment created successfully") {
         emit(PostApartmentSuccess(result));
       } else if (result is Map<String, dynamic>) {
-        // These are the validation errors (city_id, rooms, etc.)
         emit(PostApartmentError(result));
       } else {
-        // General error messages
         emit(PostApartmentError(result.toString()));
       }
     } catch (e) {
-      emit(PostApartmentError("حدث خطأ غير متوقع: ${e.toString()}"));
+      emit(PostApartmentError("unexpected error occured ${e.toString()}"));
     }
   }
 }

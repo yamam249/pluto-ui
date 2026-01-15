@@ -27,7 +27,7 @@ class DioFactory {
       InterceptorsWrapper(
         onError: (DioException e, handler) async {
           if (e.response?.statusCode == 401) {
-            print("🚨 Unauthorized! Kicking user to login...");
+            print(" Unauthorized , moving user to login");
 
             ScaffoldMessenger.of(navigatorKey.currentContext!).clearSnackBars();
             await SecureStorageService().deleteToken();
@@ -37,7 +37,7 @@ class DioFactory {
               (route) => false,
             );
           }
-          return handler.next(e); // Continue with the error
+          return handler.next(e);
         },
       ),
     );

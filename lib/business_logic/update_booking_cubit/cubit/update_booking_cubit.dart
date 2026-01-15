@@ -1,9 +1,8 @@
-// update_booking_cubit.dart
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pluto_ui/data/models/update_booking_request_model.dart';
 import 'package:pluto_ui/data/repositories/booking_repo.dart';
-import 'package:pluto_ui/data/web_services/login_api.dart'; // For ApiException
+import 'package:pluto_ui/data/web_services/login_api.dart';
 
 part 'update_booking_state.dart';
 
@@ -22,7 +21,6 @@ class UpdateBookingCubit extends Cubit<UpdateBookingState> {
       final message = await _bookingRepo.updateBooking(bookingId, request);
       emit(UpdateBookingSuccess(message));
     } on ValidationException catch (e) {
-      // Catch specific validation errors from backend
       emit(UpdateBookingValidationError(e.errors));
     } on ApiException catch (e) {
       emit(UpdateBookingFailure(e.message));

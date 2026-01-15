@@ -14,9 +14,9 @@ class BookingApi {
   static final BookingApi _singleton = BookingApi._internal();
   factory BookingApi() => _singleton;
 
-  // --- Helper Function for Consistent Error Handling ---
+  //  Helper Function for Consistent Error Handling
   void _handleDioError(DioException e) {
-    print('❌ DIO EXCEPTION CAUGHT: ${e.response?.statusCode ?? e.type}');
+    print(' DIO EXCEPTION CAUGHT: ${e.response?.statusCode ?? e.type}');
 
     if (e.response?.statusCode == 500) {
       throw ApiException('Server Error (500). Please try again later.');
@@ -30,17 +30,13 @@ class BookingApi {
       );
     }
 
-    // Default message from server or fallback
     final errorMessage =
         e.response?.data?['message'] ?? 'An unknown server error occurred.';
     throw ApiException(errorMessage);
   }
 
-  // --- API Methods ---
-
   Future<String> createBooking(String token, CreateBookingModel booking) async {
     try {
-      // Sending data as form-data per backend requirements
       final formData = FormData.fromMap(booking.toJson());
 
       Response response = await _dio.post(
@@ -70,7 +66,6 @@ class BookingApi {
       if (e.response?.statusCode == 404) {
         throw ApiException(" not found.");
       }
-      // Handle everything else via helper
       _handleDioError(e);
       rethrow;
     } catch (e) {
@@ -112,8 +107,6 @@ class BookingApi {
       throw ApiException("An unexpected error occurred: ${e.toString()}");
     }
   }
-
-  // Inside BookingApi class
 
   Future<String> cancelBooking(String token, int bookingId) async {
     try {
@@ -164,19 +157,15 @@ class BookingApi {
           final formattedErrors = errorsData.map(
             (key, value) => MapEntry(key, List<String>.from(value)),
           );
-          // Throwing specific validation exception to be caught by Cubit
           throw ValidationException(formattedErrors);
         }
       }
-      // Handle specific status codes from your Laravel controller
       if (e.response?.statusCode == 402) {
-        // NotEnoughBalanceException
         throw ApiException(
           e.response?.data['message'] ?? "Insufficient balance.",
         );
       }
       if (e.response?.statusCode == 400) {
-        // DomainException
         throw ApiException(
           e.response?.data['message'] ?? "Invalid update request.",
         );
@@ -196,7 +185,7 @@ class BookingApi {
   Future<List<RegistrationModel>> fetchRegistrations(String token) async {
     try {
       Response response = await _dio.get(
-        '$_endpoint/registrations', // Resulting in /bookings/registrations
+        '$_endpoint/registrations',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
@@ -241,7 +230,6 @@ class BookingApi {
 
       throw ApiException("Unexpected response from server.");
     } on DioException catch (e) {
-      // Handling the DomainException (400) thrown by your Laravel backend
       if (e.response?.statusCode == 400) {
         throw ApiException(
           e.response?.data['message'] ?? "Could not accept booking.",
@@ -272,7 +260,6 @@ class BookingApi {
 
       throw ApiException("Unexpected response from server.");
     } on DioException catch (e) {
-      // Handling the DomainException (400) from your Laravel backend
       if (e.response?.statusCode == 400) {
         throw ApiException(
           e.response?.data['message'] ?? "Could not decline booking.",
@@ -294,7 +281,7 @@ class BookingApi {
   ) async {
     try {
       Response response = await _dio.get(
-        '$_endpoint/updateRequests', // Results in /bookings/updateRequests
+        '$_endpoint/updateRequests',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 

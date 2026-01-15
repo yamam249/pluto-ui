@@ -17,16 +17,16 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       await loginAuthRepo.loginUser(phone, password);
 
-      print('Cubit: تسجيل الدخول وحفظ التوكن نجح، إصدار حالة LoginSuccess');
+      print('Cubit: LoginSuccess');
       emit(LoginSuccess());
     } on ValidationException catch (e) {
-      print('Cubit: خطأ في التحقق (422)، إصدار حالة LoginValidationError');
-      emit(LoginValidationError(e.errors)); // Pass the error map to the state
+      print('Cubit: LoginValidationError');
+      emit(LoginValidationError(e.errors));
     } on ApiException catch (e) {
-      print('Cubit: فشل API/عام، إصدار حالة LoginFailure');
+      print('Cubit: LoginFailure');
       emit(LoginFailure(e.message));
     } catch (e) {
-      print('Cubit: فشل غير متوقع، إصدار حالة LoginFailure');
+      print('Cubit: LoginFailure');
       emit(LoginFailure(e.toString()));
     }
   }
@@ -38,7 +38,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<bool> isUserLoggedIn() async {
     final token = await loginAuthRepo.getAuthToken();
-    return token != null; // Directly returns true if token exists, false if not
+    return token != null;
   }
 
   Future<void> logout() async {

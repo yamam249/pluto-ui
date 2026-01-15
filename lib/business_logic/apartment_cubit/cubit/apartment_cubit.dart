@@ -15,10 +15,8 @@ class ApartmentCubit extends Cubit<ApartmentState> {
     if (state is ApartmentLoaded) {
       final currentApartments = (state as ApartmentLoaded).apartments;
 
-      // Create a new list with the updated apartment
       final updatedList = currentApartments.map((apt) {
         if (apt.id == apartmentId) {
-          // Return a copy of the apartment with the new status
           apt.isFavorite = isFavorite;
           return apt;
         }
@@ -29,8 +27,6 @@ class ApartmentCubit extends Cubit<ApartmentState> {
     }
   }
 
-  /// Fetches apartments, handling both initial load and filtered searches.
-  /// If filters map is null/empty, it calls the 'getAllApartments' method.
   Future<void> fetchApartments({Map<String, dynamic>? filters}) async {
     emit(ApartmentLoading());
 
@@ -38,10 +34,8 @@ class ApartmentCubit extends Cubit<ApartmentState> {
       final List<ApartmentModel> apartments;
 
       if (filters == null || filters.isEmpty) {
-        // Fetch all apartments (Home Screen default)
         apartments = await apartmentRepo.getAllApartments();
       } else {
-        // Fetch filtered apartments (Filter Screen result)
         apartments = await apartmentRepo.getFilteredApartments(filters);
       }
 

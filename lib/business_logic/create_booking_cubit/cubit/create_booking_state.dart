@@ -19,7 +19,6 @@ final class CreateBookingSuccess extends CreateBookingState {
   List<Object> get props => [message];
 }
 
-// For 402, 409, and general errors
 final class CreateBookingError extends CreateBookingState {
   final String message;
   const CreateBookingError(this.message);
@@ -28,7 +27,6 @@ final class CreateBookingError extends CreateBookingState {
   List<Object> get props => [message];
 }
 
-// Specifically for 422 Validation Errors
 final class CreateBookingValidationError extends CreateBookingState {
   final Map<String, List<String>> errors;
   const CreateBookingValidationError(this.errors);

@@ -19,9 +19,8 @@ final class PostApartmentSuccess extends PostApartmentState {
   List<Object?> get props => [message];
 }
 
-// 3. Carry either a String (Server error) or Map (Validation errors)
 final class PostApartmentError extends PostApartmentState {
-  final dynamic error; // Can be String or Map<String, dynamic>
+  final dynamic error;
   const PostApartmentError(this.error);
 
   @override

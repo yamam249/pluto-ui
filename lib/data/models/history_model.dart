@@ -18,7 +18,6 @@ class HistoryModel {
   factory HistoryModel.fromJson(Map<String, dynamic> json) {
     return HistoryModel(
       id: json['id'],
-      // We reuse your existing ApartmentModel.fromJson here
       apartment: ApartmentModel.fromJson(json['apartment']),
       fromDate: json['from_date'],
       toDate: json['to_date'],

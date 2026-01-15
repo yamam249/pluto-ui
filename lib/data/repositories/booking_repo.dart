@@ -12,52 +12,35 @@ class BookingRepo {
   final BookingApi _api;
   final SecureStorageService _storage;
 
-  // Dependency Injection (DI) through the constructor
   BookingRepo(this._api, this._storage);
 
-  /// Helper to securely retrieve the auth token and check its existence.
-  // Future<String> _getAuthToken() async {
-  //   final authToken = await _storage.getToken();
-  //   if (authToken == null || authToken.isEmpty) {
-  //     throw ApiException(
-  //       'Authentication token is missing. Please log in again.',
-  //     );
-  //   }
-  //   return authToken;
-  // }
   Future<String> _getAuthToken() async {
     final authToken = await _storage.getToken();
     if (authToken == null || authToken.isEmpty) {
-      // 1. Silent Navigation: Kick them to login immediately
       navigatorKey.currentState?.pushNamedAndRemoveUntil(
         '/login',
         (route) => false,
       );
 
-      // 2. Throw a specific "Silent" exception that the UI logic will ignore
       throw ApiException('auth-ignore');
     }
     return authToken;
   }
 
-  /// Handles the creation of a new booking request.
   Future<String> createBooking(CreateBookingModel bookingData) async {
     final authToken = await _getAuthToken();
 
-    // Delegate the request to the BookingApi
     return _api.createBooking(authToken, bookingData);
   }
 
-  /// Fetches the list of user bookings (History).
   Future<List<HistoryModel>> getBookingHistory() async {
     final authToken = await _getAuthToken();
 
-    // Delegate the request to the BookingApi and return the list of models
     return _api.fetchHistory(authToken);
   }
 
   Future<String> cancelBooking(int bookingId) async {
-    final token = await _getAuthToken(); // Use your existing token helper
+    final token = await _getAuthToken();
     return _api.cancelBooking(token, bookingId);
   }
 

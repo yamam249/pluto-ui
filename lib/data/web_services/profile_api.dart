@@ -11,9 +11,8 @@ class ProfileApi {
   ProfileApi._internal();
   factory ProfileApi() => _singleton;
 
-  // --- Consistent Error Handling ---
   void _handleDioError(DioException e) {
-    print('❌ PROFILE DIO EXCEPTION: ${e.response?.statusCode ?? e.type}');
+    print(' PROFILE DIO EXCEPTION: ${e.response?.statusCode ?? e.type}');
 
     if (e.response?.statusCode == 500) {
       throw ApiException('Server error (500). Please try again later.');
@@ -34,12 +33,11 @@ class ProfileApi {
 
       final response = await _dio.get(_endpoint, options: options);
 
-      print('✅ PROFILE RESPONSE STATUS: ${response.statusCode}');
+      print(' PROFILE RESPONSE STATUS: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final dynamic responsePayload = response.data;
 
-        // Validation: Ensure response is a Map and contains 'data'
         if (responsePayload is! Map<String, dynamic>) {
           throw ApiException('Unexpected response format.');
         }
@@ -58,7 +56,7 @@ class ProfileApi {
       _handleDioError(e);
       rethrow;
     } on Exception catch (e) {
-      print('💥 GENERAL EXCEPTION: ${e.toString()}');
+      print(' GENERAL EXCEPTION: ${e.toString()}');
       throw ApiException('An unexpected error occurred.');
     }
   }

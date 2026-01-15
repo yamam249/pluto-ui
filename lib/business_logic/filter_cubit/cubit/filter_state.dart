@@ -20,7 +20,6 @@ class FilterGovernoratesLoaded extends FilterState {
   List<Object?> get props => [governorates];
 }
 
-// Shown if the API or Repo throws an error
 class FilterError extends FilterState {
   final String message;
 
@@ -39,7 +38,7 @@ class FilterCitiesLoaded extends FilterState {
 }
 
 class FilterLoadingCities extends FilterState {
-  final List<GovernorateModel> governorates; // Add this
+  final List<GovernorateModel> governorates;
   const FilterLoadingCities(this.governorates);
 
   @override

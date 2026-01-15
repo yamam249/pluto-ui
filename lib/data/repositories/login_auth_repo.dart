@@ -20,33 +20,28 @@ class LoginAuthRepo {
 
       await secureStorageService.saveToken(response.token);
 
-      print('✅ تم تسجيل الدخول وحفظ التوكن في الريبو');
-
+      print('log in was made and saving token');
     } on ValidationException {
-      print('⚠️ تم إرسال خطأ التحقق (422) إلى طبقة الكيوبت.');
+      print('repo: validation errors');
       rethrow;
     } on ApiException {
-      print('⚠️ تم إرسال خطأ عام في API إلى طبقة الكيوبت.');
+      print("repo: general error");
       rethrow;
     } catch (e) {
-      throw Exception(
-        'حدث خطأ غير متوقع في عملية تسجيل الدخول: ${e.toString()}',
-      );
+      throw Exception("repo: unexpected error occured: ${e.toString()}");
     }
   }
 
-  // Helper function to check login status, useful for app startup
+  // Helper function to check login status
   Future<String?> getAuthToken() async {
     return await secureStorageService.getToken();
   }
-
 
   Future<void> logoutUser() async {
     try {
       final token = await secureStorageService.getToken();
 
       if (token != null) {
-        //  Inform the server to revoke the token
         await loginApi.logout(token);
       }
     } on ApiException catch (e) {
@@ -54,9 +49,8 @@ class LoginAuthRepo {
         'Repo: Server logout failed, but proceeding to clear local storage: ${e.message}',
       );
     } finally {
-      //  Always delete the token locally to ensure the user is "logged out" in the UI
       await secureStorageService.deleteToken();
-      print('✅ Repo: Local token deleted.');
+      print(' Repo: Local token deleted.');
     }
   }
 }

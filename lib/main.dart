@@ -10,25 +10,20 @@ import 'package:pluto_ui/business_logic/registrations_cubit/cubit/registrations_
 import 'package:pluto_ui/business_logic/theme_cubit.dart';
 import 'package:pluto_ui/business_logic/update_booking_cubit/cubit/update_booking_cubit.dart';
 import 'package:pluto_ui/business_logic/update_registrations_cubit/cubit/update_registrations_cubit.dart';
-
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/repositories/booking_repo.dart';
 import 'package:pluto_ui/data/web_services/booking_api.dart';
-//import 'package:pluto_ui/app_router.dart';
-
 import 'package:pluto_ui/data/web_services/signup_api.dart';
 import 'package:pluto_ui/data/web_services/login_api.dart';
 import 'package:pluto_ui/data/web_services/apartment_api.dart';
 import 'package:pluto_ui/data/web_services/profile_api.dart';
 import 'package:pluto_ui/data/web_services/post_apartment_api.dart';
 import 'package:pluto_ui/data/local_storage/secure_storage_service.dart';
-
 import 'package:pluto_ui/data/repositories/signup_repo.dart';
 import 'package:pluto_ui/data/repositories/login_auth_repo.dart';
 import 'package:pluto_ui/data/repositories/apartment_repo.dart';
 import 'package:pluto_ui/data/repositories/profile_repo.dart';
 import 'package:pluto_ui/data/repositories/post_apartment_repo.dart';
-
 import 'package:pluto_ui/business_logic/sign_up_cubit/cubit/sign_up_cubit.dart';
 import 'package:pluto_ui/business_logic/login_cubit/cubit/login_cubit.dart';
 import 'package:pluto_ui/business_logic/all_cities_cubit/cubit/all_cities_cubit.dart';
@@ -38,7 +33,6 @@ import 'package:pluto_ui/business_logic/favorite_cubit/cubit/favorite_cubit.dart
 import 'package:pluto_ui/business_logic/filter_cubit/cubit/filter_cubit.dart';
 import 'package:pluto_ui/business_logic/post_apartment_cubit/cubit/post_apartment_cubit.dart';
 import 'package:pluto_ui/business_logic/profile_cubit/cubit/profile_cubit.dart';
-
 import 'package:pluto_ui/presentation/screens/log_in_screen.dart';
 import 'package:pluto_ui/presentation/screens/mode_screen.dart';
 import 'package:pluto_ui/presentation/screens/sign_up_screen.dart';
@@ -150,7 +144,6 @@ class PlutoApp extends StatelessWidget {
         BlocProvider<UpdateRegistrationsCubit>(
           create: (context) => UpdateRegistrationsCubit(bookingRepo),
         ),
-        // BlocProvider(create: (_) => ThemeCubit()),
         BlocProvider(
           create: (_) => ThemeCubit(secureStorageService)..loadTheme(),
         ),

@@ -10,25 +10,14 @@ class PostApartmentRepo {
 
   PostApartmentRepo(this._api, this._storage);
 
-  // Future<String> _getAuthToken() async {
-  //   final authToken = await _storage.getToken();
-  //   if (authToken == null || authToken.isEmpty) {
-  //     throw ApiException(
-  //       'Authentication token is missing. Please log in again.',
-  //     );
-  //   }
-  //   return authToken;
-  // }
   Future<String> _getAuthToken() async {
     final authToken = await _storage.getToken();
     if (authToken == null || authToken.isEmpty) {
-      // 1. Silent Navigation: Kick them to login immediately
       navigatorKey.currentState?.pushNamedAndRemoveUntil(
         '/login',
         (route) => false,
       );
 
-      // 2. Throw a specific "Silent" exception that the UI logic will ignore
       throw ApiException('auth-ignore');
     }
     return authToken;
@@ -41,14 +30,11 @@ class PostApartmentRepo {
 
     if (response is Map<String, dynamic>) {
       if (response.containsKey('message')) {
-        // Return the success message from your 200 OK response
         return response['message'] as String;
       }
-      // Return the validation errors map if the status was 422
       return response;
     }
 
-    // Return general error strings directly (like "Session expired" or "Server error")
     return response;
   }
 }
