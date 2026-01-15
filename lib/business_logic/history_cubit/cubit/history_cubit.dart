@@ -17,13 +17,11 @@ class HistoryCubit extends Cubit<HistoryState> {
       final history = await bookingRepo.getBookingHistory();
       emit(HistoryLoaded(history));
     } catch (e) {
-      // Catching the ApiException message or a fallback
       emit(HistoryError(e.toString()));
     }
   }
 
   Future<void> cancelBooking(int bookingId) async {
-    // Keep track of previous state to return to it if needed
     final currentState = state;
 
     emit(HistoryActionLoading());
@@ -32,11 +30,9 @@ class HistoryCubit extends Cubit<HistoryState> {
 
       emit(HistoryActionSuccess(message));
 
-      // Refresh the list automatically
       await fetchHistory();
     } on ApiException catch (e) {
       emit(HistoryError(e.message));
-      // If error occurs, restore the list if we were already showing it
       if (currentState is HistoryLoaded) emit(currentState);
     } catch (e) {
       emit(const HistoryError("Failed to cancel booking."));
