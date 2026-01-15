@@ -157,6 +157,7 @@ import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/presentation/screens/apartment_details_screen.dart';
 import 'package:pluto_ui/presentation/widgets/place_card.dart';
 import 'package:pluto_ui/presentation/screens/filter_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -178,7 +179,7 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Pluto',
+              'Pluto'.tr(),
               style: TextStyle(
                 color: theme.primaryColor,
                 // color: Theme.of(context).brightness == Brightness.light
@@ -230,7 +231,7 @@ class HomeScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
-                    'Error loading apartments: ${state.message}',
+                    'Error loading apartments: ${state.message}'.tr(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: AppTheme.kColorDanger,
@@ -242,9 +243,9 @@ class HomeScreen extends StatelessWidget {
             }
             if (state is ApartmentLoaded) {
               if (state.apartments.isEmpty) {
-                return const Center(
+                return  Center(
                   child: Text(
-                    'No apartments found.',
+                    'No apartments found.'.tr(),
                     style: TextStyle(fontSize: 18),
                   ),
                 );
@@ -276,7 +277,7 @@ class HomeScreen extends StatelessWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height * 0.3),
-                  const Center(child: Text("Pull down to try again")),
+                   Center(child: Text("Pull down to try again".tr())),
                 ],
               );
             }

@@ -314,6 +314,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/profile_cubit/cubit/profile_cubit.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ProfileInfoScreen extends StatefulWidget {
   // 🚨 Removed isDark parameter
@@ -345,7 +346,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
       backgroundColor: bgColor,
       appBar: AppBar(
         title: Text(
-          "Profile Info",
+          "Profile Info".tr(),
           style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
         ),
         backgroundColor: cardColor,
@@ -378,7 +379,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
             final profile = state.profile;
 
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsetsDirectional.all(20),
               child: Column(
                 children: [
                   Center(
@@ -426,9 +427,9 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                             ),
                           ),
                         ),
-                        const Positioned(
+                        const PositionedDirectional(
                           bottom: 5,
-                          right: 5,
+                          end: 5,
                           child: CircleAvatar(
                             radius: 12,
                             backgroundColor: Colors.green,
@@ -445,37 +446,37 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                   const SizedBox(height: 25),
                   _buildWalletCard(profile.balance, primaryColor),
                   const SizedBox(height: 25),
-                  _sectionTitle("Personal Information", fontColor),
+                  _sectionTitle("Personal Information".tr(), fontColor),
                   _buildInfoCard(
-                    "First Name",
+                    "First Name".tr(),
                     profile.firstName,
                     cardColor,
                     fontColor,
                     isDarkMode,
                   ),
                   _buildInfoCard(
-                    "Last Name",
+                    "Last Name".tr(),
                     profile.lastName,
                     cardColor,
                     fontColor,
                     isDarkMode,
                   ),
                   _buildInfoCard(
-                    "Phone",
+                    "Phone".tr(),
                     profile.phone,
                     cardColor,
                     fontColor,
                     isDarkMode,
                   ),
                   _buildInfoCard(
-                    "Birthdate",
+                    "Birthdate".tr(),
                     profile.birthDate,
                     cardColor,
                     fontColor,
                     isDarkMode,
                   ),
                   const SizedBox(height: 25),
-                  _sectionTitle("Identity Document", fontColor),
+                  _sectionTitle("Identity Document".tr(), fontColor),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: Image.network(
@@ -510,7 +511,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   Widget _buildWalletCard(String balance, Color primaryColor) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsetsDirectional.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [primaryColor, primaryColor.withOpacity(0.8)],
@@ -530,8 +531,8 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Available Balance",
+              Text(
+                "Available Balance".tr(),
                 style: TextStyle(color: Colors.white70, fontSize: 13),
               ),
               const SizedBox(height: 5),
@@ -559,7 +560,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsetsDirectional.all(16),
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(15),

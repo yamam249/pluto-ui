@@ -241,6 +241,7 @@ import 'profile_info_screen.dart';
 import 'history_screen.dart';
 import 'mode_screen.dart';
 import 'language_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -266,7 +267,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Profile",
+          "Profile".tr(),
           style: TextStyle(
             color: fontColor,
             fontWeight: FontWeight.bold,
@@ -320,7 +321,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        "Guest User",
+                        "Guest User".tr(),
                         style: TextStyle(fontSize: 18, color: fontColor),
                       ),
                     ],
@@ -333,7 +334,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildItem(
               theme: theme,
               icon: Icons.person_outline,
-              text: "Profile Information",
+              text: "Profile Information".tr(),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const ProfileInfoScreen()),
@@ -343,7 +344,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildItem(
               theme: theme,
               icon: Icons.history,
-              text: "History",
+              text: "History".tr(),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const HistoryScreen()),
@@ -353,7 +354,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildItem(
               theme: theme,
               icon: Icons.dark_mode_outlined,
-              text: "Mode (Light / Dark)",
+              text: "Mode (Light / Dark)".tr(),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const ModeScreen()),
@@ -363,7 +364,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildItem(
               theme: theme,
               icon: Icons.language,
-              text: "Language",
+              text: "Language".tr(),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -375,7 +376,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildItem(
               theme: theme,
               icon: Icons.logout,
-              text: "Logout",
+              text: "Logout".tr(),
               onTap: () => showLogoutDialog(context, theme, isDarkMode),
               color: AppTheme.kColorDanger,
             ),
@@ -423,6 +424,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Icons.arrow_forward_ios,
                 size: 14,
                 color: defaultFontColor?.withOpacity(0.3),
+                
               ),
             ],
           ),
@@ -440,12 +442,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: theme.cardColor,
-        title: const Text("Logout"),
-        content: const Text("Are you sure you want to logout?"),
+        title:  Text("Logout".tr()),
+        content:  Text("Are you sure you want to logout?".tr()),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("Cancel", style: TextStyle(color: Colors.grey)),
+            child: Text("Cancel".tr(), style: TextStyle(color: Colors.grey)),
           ),
           TextButton(
             onPressed: () {
@@ -453,7 +455,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               context.read<LoginCubit>().logout();
             },
             child: Text(
-              "Logout",
+              "Logout".tr(),
               style: TextStyle(color: AppTheme.kColorDanger),
             ),
           ),

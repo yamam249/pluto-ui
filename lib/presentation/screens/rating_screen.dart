@@ -239,6 +239,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/rating_cubit/cubit/rating_cubit.dart';
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/models/apartment_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RatingScreen extends StatefulWidget {
   final ApartmentModel apartmentModel;
@@ -267,7 +268,7 @@ class _RatingScreenState extends State<RatingScreen> {
         elevation: 0,
         backgroundColor: theme.cardColor,
         title: Text(
-          "Rate Your Stay",
+          "Rate Your Stay".tr(),
           style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
         ),
         iconTheme: IconThemeData(color: fontColor),
@@ -305,7 +306,7 @@ class _RatingScreenState extends State<RatingScreen> {
                 const SizedBox(height: 40),
 
                 Text(
-                  "How was your experience?",
+                  "How was your experience?".tr(),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -444,8 +445,8 @@ class _RatingScreenState extends State<RatingScreen> {
                 strokeWidth: 2.5,
               ),
             )
-          : const Text(
-              "Submit Rating",
+          :  Text(
+              "Submit Rating".tr(),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

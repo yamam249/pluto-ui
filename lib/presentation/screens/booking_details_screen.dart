@@ -321,6 +321,7 @@ import 'package:pluto_ui/business_logic/create_booking_cubit/cubit/create_bookin
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/models/apartment_model.dart';
 import 'package:pluto_ui/data/models/create_booking_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BookingDetailsScreen extends StatefulWidget {
   final ApartmentModel apartment;
@@ -426,11 +427,11 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
         if (state is CreateBookingSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               behavior: SnackBarBehavior.floating,
               backgroundColor: AppTheme.kColorSuccess,
               content: Text(
-                'Request added successfully ',
+                'Request added successfully '.tr(),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -451,7 +452,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
-          title: const Text("Booking Details"),
+          title:  Text("Booking Details".tr()),
           backgroundColor: theme.scaffoldBackgroundColor,
           elevation: 0,
           centerTitle: true,
@@ -479,7 +480,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        "Please select the duration of your reservation",
+                        "Please select the duration of your reservation".tr(),
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
@@ -494,7 +495,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
               buildStyledDatePicker(
                 theme: theme,
-                label: "From Date",
+                label: "From Date".tr(),
                 selectedDate: fromDate,
                 errorText: getErrorForField('from_date'),
                 onTap: () => _selectDate(context, true),
@@ -503,7 +504,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
               buildStyledDatePicker(
                 theme: theme,
-                label: "To Date",
+                label: "To Date".tr(),
                 selectedDate: toDate,
                 errorText: getErrorForField('to_date'),
                 onTap: () => _selectDate(context, false),
@@ -532,8 +533,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                       : _submitBooking,
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          "Confirm Reservation",
+                      :  Text(
+                          "Confirm Reservation".tr(),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -598,7 +599,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                 const SizedBox(width: 15),
                 Text(
                   selectedDate == null
-                      ? "Select date"
+                      ? "Select date".tr()
                       : DateFormat('dd MMM, yyyy').format(selectedDate),
                   style: TextStyle(
                     color: fontColor,

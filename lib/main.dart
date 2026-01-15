@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pluto_ui/business_logic/create_booking_cubit/cubit/create_booking_cubit.dart';
 import 'package:pluto_ui/business_logic/history_cubit/cubit/history_cubit.dart';
@@ -13,7 +14,7 @@ import 'package:pluto_ui/business_logic/update_registrations_cubit/cubit/update_
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/repositories/booking_repo.dart';
 import 'package:pluto_ui/data/web_services/booking_api.dart';
-// import 'package:pluto_ui/app_router.dart';
+//import 'package:pluto_ui/app_router.dart';
 
 import 'package:pluto_ui/data/web_services/signup_api.dart';
 import 'package:pluto_ui/data/web_services/login_api.dart';
@@ -46,12 +47,21 @@ import 'package:pluto_ui/presentation/screens/splash_screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((
     _,
   ) {
-    runApp(PlutoApp());
+    runApp(
+      EasyLocalization(
+        supportedLocales: const [Locale('en'), Locale('ar')],
+        path: 'assets/translations', 
+        fallbackLocale: const Locale('en'),
+        startLocale: const Locale('en'),
+        child: PlutoApp(),
+      ),
+    );
   });
 }
 
@@ -161,15 +171,19 @@ class PlutoApp extends StatelessWidget {
         ),
         BlocProvider(create: (_) => ThemeCubit()),
       ],
+
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
         minTextAdapt: true,
         builder: (context, child) {
           return BlocBuilder<ThemeCubit, ThemeMode>(
-            builder: (context, mode) {
+            builder: (stateContext, mode) {
               return MaterialApp(
                 navigatorKey: navigatorKey,
                 debugShowCheckedModeBanner: false,
+                localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
 
                 theme: AppTheme.lightTheme,
                 darkTheme: AppTheme.darkTheme,

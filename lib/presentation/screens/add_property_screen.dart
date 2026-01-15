@@ -429,6 +429,7 @@ import 'package:pluto_ui/business_logic/post_apartment_cubit/cubit/post_apartmen
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/models/city_model.dart';
 import 'package:pluto_ui/data/models/post_apartment_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AddPropertyScreen extends StatefulWidget {
   // 🚨 Removed isDark parameter
@@ -525,8 +526,8 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               SnackBar(
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: AppTheme.kColorDanger,
-                content: const Text(
-                  'Please correct the mistakes ',
+                content:  Text(
+                  'Please correct the mistakes '.tr(),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -549,7 +550,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
           elevation: 0,
           centerTitle: true,
           title: Text(
-            "Estate Adding",
+            "Estate Adding".tr(),
             style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
           ),
           iconTheme: IconThemeData(color: fontColor),
@@ -594,7 +595,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                     ),
                     if (getErrorForField('photo') != null)
                       Padding(
-                        padding: const EdgeInsets.only(top: 8, left: 10),
+                        padding: const EdgeInsetsDirectional.only(top: 8, start: 10),
                         child: Text(
                           getErrorForField('photo')!,
                           style: TextStyle(
@@ -610,7 +611,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               _buildDropdownField(theme, cardColor, fontColor),
               const SizedBox(height: 15),
               _inputField(
-                "Area size",
+                "Area size".tr(),
                 areaSizeController,
                 Icons.square_foot,
                 getErrorForField('area'),
@@ -618,7 +619,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               ),
               const SizedBox(height: 15),
               _inputField(
-                "Price",
+                "Price".tr(),
                 priceController,
                 Icons.attach_money,
                 getErrorForField('price'),
@@ -626,7 +627,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               ),
               const SizedBox(height: 15),
               _inputField(
-                "Floor",
+                "Floor".tr(),
                 floorController,
                 Icons.layers,
                 getErrorForField('floor'),
@@ -634,7 +635,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
               ),
               const SizedBox(height: 15),
               _inputField(
-                "Rooms",
+                "Rooms".tr(),
                 roomsController,
                 Icons.bed,
                 getErrorForField('rooms'),
@@ -656,8 +657,8 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          "Add the estate",
+                      :  Text(
+                          "Add the estate".tr(),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -685,7 +686,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
           value: selectedCity,
           alignment: Alignment.center,
           decoration: _inputDecoration(
-            "Select the city",
+            "Select the city".tr(),
             Icons.location_city,
             getErrorForField('city_id'),
             theme,
@@ -727,7 +728,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
       maxLines: 4,
       style: TextStyle(color: theme.textTheme.bodyLarge?.color),
       decoration: _inputDecoration(
-        "Description",
+        "Description".tr(),
         Icons.description,
         getErrorForField('description'),
         theme,

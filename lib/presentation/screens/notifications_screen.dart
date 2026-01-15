@@ -533,6 +533,7 @@ import 'package:pluto_ui/data/models/registration_model.dart';
 import 'package:pluto_ui/data/models/update_registration_model.dart';
 import 'package:pluto_ui/presentation/screens/update_details_for_owner_screen.dart';
 import 'rental_request_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -564,7 +565,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Notifications",
+          "Notifications".tr(),
           style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
         ),
         backgroundColor: theme.cardColor,
@@ -598,7 +599,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               if (normalRequests.isEmpty && updateRequests.isEmpty) {
                 return Center(
                   child: Text(
-                    "No notifications yet",
+                    "No notifications yet".tr(),
                     style: TextStyle(color: theme.textTheme.bodySmall?.color),
                   ),
                 );
@@ -608,17 +609,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 color: theme.primaryColor,
                 onRefresh: _refreshData,
                 child: ListView(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsetsDirectional.all(16),
                   children: [
                     if (normalRequests.isNotEmpty) ...[
-                      _sectionHeader("New Booking Requests", fontColor),
+                      _sectionHeader("New Booking Requests".tr(), fontColor),
                       ...normalRequests.map(
                         (item) => _buildNormalItem(item, theme),
                       ),
                     ],
                     if (updateRequests.isNotEmpty) ...[
                       const SizedBox(height: 24),
-                      _sectionHeader("Date Change Requests", fontColor),
+                      _sectionHeader("Date Change Requests".tr(), fontColor),
                       ...updateRequests.map(
                         (item) => _buildUpdateItem(item, theme),
                       ),
@@ -635,7 +636,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   Widget _sectionHeader(String title, Color? fontColor) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12, left: 4),
+      padding: const EdgeInsetsDirectional.only(bottom: 12, start: 4),
       child: Text(
         title,
         style: TextStyle(
@@ -652,7 +653,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return _baseNotificationCard(
       theme: theme,
       title: "${item.user.firstName} ${item.user.lastName}",
-      subtitle: "New Booking Request",
+      subtitle: "New Booking Request".tr(),
       location: "${item.apartment.governorate}, ${item.apartment.city}",
       imageUrl: item.user.profileImageUrl,
       hasImage: item.user.profileImage.isNotEmpty,
@@ -674,13 +675,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return _baseNotificationCard(
       theme: theme,
       title: "${booking.user.firstName} ${booking.user.lastName}",
-      subtitle: "Requested Date Change",
+      subtitle: "Requested Date Change".tr(),
       subtitleColor: Colors.orange,
       location: "${booking.apartment.governorate}, ${booking.apartment.city}",
       imageUrl: booking.user.profileImageUrl,
       hasImage: booking.user.profileImage.isNotEmpty,
       initials: booking.user.firstName[0],
-      status: "UPDATE",
+      status: "UPDATE".tr(),
       isUpdate: true,
       onTap: () {
         Navigator.push(

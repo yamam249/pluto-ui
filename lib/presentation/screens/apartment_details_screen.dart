@@ -245,6 +245,8 @@ import 'package:pluto_ui/business_logic/apartment_details_cubit/cubit/apartment_
 import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/models/apartment_model.dart';
 import 'package:pluto_ui/presentation/screens/booking_details_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 
 class ApartmentDetailsScreen extends StatefulWidget {
   final int apartmentId;
@@ -357,7 +359,7 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Text(
-                  'Error loading details: ${state.message}',
+                  'Error loading details: ${state.message}'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(color: AppTheme.kColorDanger, fontSize: 18),
                 ),
@@ -373,62 +375,62 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                 SliverList(
                   delegate: SliverChildListDelegate([
                     Container(
-                      margin: const EdgeInsets.all(16),
-                      padding: const EdgeInsets.all(8),
+                      margin: const EdgeInsetsDirectional.all(16),
+                      padding: const EdgeInsetsDirectional.all(8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           apartmentInfo(
-                            'Governorate : ',
+                            'Governorate : '.tr(),
                             apartmentModel.governorate.toString(),
                             theme,
                           ),
                           SizedBox(height: 20),
 
                           apartmentInfo(
-                            'City : ',
+                            'City : '.tr(),
                             apartmentModel.city.toString(),
                             theme,
                           ),
                           SizedBox(height: 20),
 
                           apartmentInfo(
-                            'Price (SYP) : ',
+                            'Price (SYP) : '.tr(),
                             apartmentModel.price.toString(),
                             theme,
                           ),
                           SizedBox(height: 20),
 
                           apartmentInfo(
-                            'Area (sqm) : ',
+                            'Area (sqm) : '.tr(),
                             apartmentModel.area.toString(),
                             theme,
                           ),
                           SizedBox(height: 20),
 
                           apartmentInfo(
-                            'Rooms : ',
+                            'Rooms : '.tr(),
                             apartmentModel.rooms.toString(),
                             theme,
                           ),
                           SizedBox(height: 20),
 
                           apartmentInfo(
-                            'Floor : ',
+                            'Floor : '.tr(),
                             apartmentModel.floor.toString(),
                             theme,
                           ),
 
                           SizedBox(height: 20),
                           apartmentInfo(
-                            'Description : ',
+                            'Description : '.tr(),
                             (apartmentModel.description ?? '').toString(),
                             theme,
                           ),
                           SizedBox(height: 20),
 
                           apartmentInfo(
-                            'Rate : ',
+                            'Rate : '.tr(),
                             (apartmentModel.rate ?? '0').toString(),
                             theme,
                           ),
@@ -481,8 +483,8 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
                           ),
                         );
                       },
-                      child: const Text(
-                        "Book Now",
+                      child: Text(
+                        "Book Now".tr(),
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

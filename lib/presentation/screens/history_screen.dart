@@ -529,6 +529,7 @@ import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/data/models/history_model.dart';
 import 'package:pluto_ui/presentation/screens/rating_screen.dart';
 import 'package:pluto_ui/presentation/screens/edit_request_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -549,7 +550,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     try {
       DateTime now = DateTime.now();
-      DateFormat format = DateFormat("dd-MM-yyyy");
+      DateFormat format = DateFormat("dd-MM-yyyy",context.locale.languageCode);;
       DateTime start = format.parse(fromDate);
       DateTime end = format.parse(toDate);
 
@@ -569,7 +570,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         backgroundColor: theme.cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: Text(
-          "Cancel Request",
+          "Cancel Request".tr(),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Theme.of(context).brightness == Brightness.light
@@ -578,7 +579,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
         ),
         content: Text(
-          "Are you sure you want to cancel the request for $name?",
+          "Are you sure you want to cancel the request for $name?".tr(),
           style: TextStyle(
             color: theme.textTheme.bodyMedium?.color?.withOpacity(0.8),
           ),
@@ -586,7 +587,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text("No", style: TextStyle(color: theme.hintColor)),
+            child: Text("No".tr(), style: TextStyle(color: theme.hintColor)),
           ),
           TextButton(
             onPressed: () {
@@ -594,7 +595,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               context.read<HistoryCubit>().cancelBooking(bookingId);
             },
             child: Text(
-              "Yes, Cancel",
+              "Yes, Cancel".tr(),
               style: TextStyle(
                 color: AppTheme.kColorDanger,
                 fontWeight: FontWeight.bold,
@@ -617,8 +618,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text(
-          "Rental History",
+        title:  Text(
+          "Rental History".tr(),
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: theme.cardColor,
@@ -663,7 +664,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               if (state.history.isEmpty) {
                 return Center(
                   child: Text(
-                    "No bookings found",
+                    "No bookings found".tr(),
                     style: TextStyle(color: subFontColor),
                   ),
                 );
@@ -773,7 +774,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Actions",
+                  "Actions".tr(),
                   style: TextStyle(
                     color: subFontColor,
                     fontWeight: FontWeight.w500,
@@ -794,25 +795,25 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     if (_isCurrentlyLiving(booking.fromDate, booking.toDate, booking.status)) {
       color = Colors.orange;
-      text = "Living";
+      text = "Living".tr();
     } else {
       switch (booking.status.toLowerCase()) {
         case 'accepted':
           color = AppTheme.kColorSuccess;
-          text = "Agreed";
+          text = "Agreed".tr();
           break;
         case 'declined':
         case 'canceled':
           color = AppTheme.kColorDanger;
-          text = booking.status == 'declined' ? "Declined" : "Canceled";
+          text = booking.status == 'declined' ? "Declined".tr() : "Canceled".tr();
           break;
         case 'completed':
           color = Colors.blue;
-          text = "Done";
+          text = "Done".tr();
           break;
         default:
           color = theme.primaryColor;
-          text = "Pending";
+          text = "Pending".tr();
       }
     }
 
@@ -892,8 +893,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
           );
         },
-        child: const Text(
-          "Rate Now",
+        child:  Text(
+          "Rate Now".tr(),
           style: TextStyle(
             color: Colors.white,
             fontSize: 12,
@@ -903,7 +904,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       );
     }
 
-    return Text("No actions", style: TextStyle(color: subFontColor));
+    return Text("No actions".tr(), style: TextStyle(color: subFontColor));
   }
 
   Widget _iconAction(IconData icon, Color color, VoidCallback onTap) {

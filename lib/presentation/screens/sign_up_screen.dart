@@ -433,6 +433,9 @@ import 'package:pluto_ui/data/models/signup_request_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pluto_ui/presentation/screens/log_in_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -530,11 +533,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
         if (state is SignUpSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+             SnackBar(
               behavior: SnackBarBehavior.floating,
               backgroundColor: AppTheme.kColorSuccess,
               content: Text(
-                'Successful account creation ',
+                'Successful account creation '.tr(),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -549,22 +552,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
             );
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+             SnackBar(
               behavior: SnackBarBehavior.floating,
               backgroundColor: AppTheme.kColorDanger,
               content: Text(
-                'Correct the mistakes ',
+                'Correct the mistakes '.tr(),
                 textAlign: TextAlign.center,
               ),
             ),
           );
         } else if (state is SignUpFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               behavior: SnackBarBehavior.floating,
               backgroundColor: AppTheme.kColorDanger,
               content: Text(
-                'Registration failed ',
+                'Registration failed '.tr(),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -600,7 +603,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Create Account",
+                    "Create Account".tr(),
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -611,14 +614,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   _inputField(
                     theme,
-                    "First Name",
+                    "First Name".tr(),
                     _firstNameController,
                     getErrorForField('first_name'),
                   ),
                   const SizedBox(height: 15),
                   _inputField(
                     theme,
-                    "Last Name",
+                    "Last Name".tr(),
                     _lastNameController,
                     getErrorForField('last_name'),
                   ),
@@ -631,7 +634,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 15),
                   _dateField(
                     theme,
-                    "Birth Date",
+                    "Birth Date".tr(),
                     _birthDateController,
                     getErrorForField('birth_date'),
                   ),
@@ -639,7 +642,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   _photoPathField(
                     theme: theme,
                     icon: Icons.camera_alt,
-                    label: "Profile Photo",
+                    label: "Profile Photo".tr(),
                     controller: _profileImageController,
                     errorText: getErrorForField('profile_image'),
                   ),
@@ -647,7 +650,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   _photoPathField(
                     theme: theme,
                     icon: Icons.badge,
-                    label: "ID Photo",
+                    label: "ID Photo".tr(),
                     controller: _idImageController,
                     errorText: getErrorForField('id_image'),
                   ),
@@ -676,8 +679,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       child: _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              "Sign Up",
+                          :  Text(
+                              "Sign Up".tr(),
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -720,7 +723,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       style: TextStyle(color: theme.textTheme.bodyLarge?.color),
       decoration: _inputDecoration(
         theme,
-        "Phone Number",
+        "Phone Number".tr(),
         Icons.phone_android,
         errorText,
       ),

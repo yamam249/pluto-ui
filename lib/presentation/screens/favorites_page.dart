@@ -119,6 +119,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/favorite_cubit/cubit/favorite_cubit.dart';
 import 'package:pluto_ui/presentation/screens/apartment_details_screen.dart';
 import 'package:pluto_ui/presentation/widgets/place_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class FavoritesPage extends StatefulWidget {
   // 🚨 Removed isDark parameter
@@ -147,7 +148,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       appBar: AppBar(
         backgroundColor: theme.cardColor,
         title: Text(
-          "Favorites",
+          "Favorites".tr(),
           style: TextStyle(color: fontColor, fontWeight: FontWeight.bold),
         ),
         elevation: 1,
@@ -163,9 +164,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
             final favorites = state.favorites;
 
             if (favorites.isEmpty) {
-              return const Center(
+              return  Center(
                 child: Text(
-                  "No favorite houses yet",
+                  "No favorite houses yet".tr(),
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 18,
@@ -210,7 +211,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Error: ${state.message}",
+                    "Error: ${state.message}".tr(),
                     textAlign: TextAlign.center,
                     style: TextStyle(color: fontColor),
                   ),
