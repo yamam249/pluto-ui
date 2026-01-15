@@ -226,17 +226,19 @@ class HomeScreen extends StatelessWidget {
               );
             }
             if (state is ApartmentError) {
+              print(state.message);
+
               return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    'Error loading apartments: ${state.message}',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 60,
                       color: AppTheme.kColorDanger,
-                      fontSize: 16,
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                  ],
                 ),
               );
             }

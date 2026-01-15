@@ -344,105 +344,119 @@ class _ApartmentDetailsScreenState extends State<ApartmentDetailsScreen> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      body: BlocBuilder<ApartmentDetailsCubit, ApartmentDetailsState>(
-        builder: (context, state) {
-          if (state is ApartmentDetailsLoading) {
-            return Center(
-              child: CircularProgressIndicator(color: primaryColor),
-            );
-          }
-
-          if (state is ApartmentDetailsError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  'Error loading details: ${state.message}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: AppTheme.kColorDanger, fontSize: 18),
-                ),
-              ),
-            );
-          }
-
-          if (state is ApartmentDetailsLoaded) {
-            final apartmentModel = state.apartment;
-            return CustomScrollView(
-              slivers: [
-                buildSliverAppBar(apartmentModel, theme),
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    Container(
-                      margin: const EdgeInsets.all(16),
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          apartmentInfo(
-                            'Governorate : ',
-                            apartmentModel.governorate.toString(),
-                            theme,
-                          ),
-                          SizedBox(height: 20),
-
-                          apartmentInfo(
-                            'City : ',
-                            apartmentModel.city.toString(),
-                            theme,
-                          ),
-                          SizedBox(height: 20),
-
-                          apartmentInfo(
-                            'Price (SYP) : ',
-                            apartmentModel.price.toString(),
-                            theme,
-                          ),
-                          SizedBox(height: 20),
-
-                          apartmentInfo(
-                            'Area (sqm) : ',
-                            apartmentModel.area.toString(),
-                            theme,
-                          ),
-                          SizedBox(height: 20),
-
-                          apartmentInfo(
-                            'Rooms : ',
-                            apartmentModel.rooms.toString(),
-                            theme,
-                          ),
-                          SizedBox(height: 20),
-
-                          apartmentInfo(
-                            'Floor : ',
-                            apartmentModel.floor.toString(),
-                            theme,
-                          ),
-
-                          SizedBox(height: 20),
-                          apartmentInfo(
-                            'Description : ',
-                            (apartmentModel.description ?? '').toString(),
-                            theme,
-                          ),
-                          SizedBox(height: 20),
-
-                          apartmentInfo(
-                            'Rate : ',
-                            (apartmentModel.rate ?? '0').toString(),
-                            theme,
-                          ),
-                          const SizedBox(height: 250),
-                        ],
-                      ),
-                    ),
-                  ]),
-                ),
-              ],
-            );
-          }
-          return const SizedBox.shrink();
+      body: RefreshIndicator(
+        color: theme.primaryColor,
+        backgroundColor: theme.cardColor,
+        onRefresh: () async {
+          await context.read<ApartmentDetailsCubit>().fetchApartmentDetails(
+            widget.apartmentId,
+          );
         },
+        child: BlocBuilder<ApartmentDetailsCubit, ApartmentDetailsState>(
+          builder: (context, state) {
+            if (state is ApartmentDetailsLoading) {
+              return Center(
+                child: CircularProgressIndicator(color: primaryColor),
+              );
+            }
+
+            if (state is ApartmentDetailsError) {
+              print(state.message);
+
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 60,
+                      color: AppTheme.kColorDanger,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              );
+            }
+
+            if (state is ApartmentDetailsLoaded) {
+              final apartmentModel = state.apartment;
+              return CustomScrollView(
+                slivers: [
+                  buildSliverAppBar(apartmentModel, theme),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      Container(
+                        margin: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            apartmentInfo(
+                              'Governorate : ',
+                              apartmentModel.governorate.toString(),
+                              theme,
+                            ),
+                            SizedBox(height: 20),
+
+                            apartmentInfo(
+                              'City : ',
+                              apartmentModel.city.toString(),
+                              theme,
+                            ),
+                            SizedBox(height: 20),
+
+                            apartmentInfo(
+                              'Price (SYP) : ',
+                              apartmentModel.price.toString(),
+                              theme,
+                            ),
+                            SizedBox(height: 20),
+
+                            apartmentInfo(
+                              'Area (sqm) : ',
+                              apartmentModel.area.toString(),
+                              theme,
+                            ),
+                            SizedBox(height: 20),
+
+                            apartmentInfo(
+                              'Rooms : ',
+                              apartmentModel.rooms.toString(),
+                              theme,
+                            ),
+                            SizedBox(height: 20),
+
+                            apartmentInfo(
+                              'Floor : ',
+                              apartmentModel.floor.toString(),
+                              theme,
+                            ),
+
+                            SizedBox(height: 20),
+                            apartmentInfo(
+                              'Description : ',
+                              (apartmentModel.description ?? '').toString(),
+                              theme,
+                            ),
+                            SizedBox(height: 20),
+
+                            apartmentInfo(
+                              'Rate : ',
+                              (apartmentModel.rate ?? '0').toString(),
+                              theme,
+                            ),
+                            const SizedBox(height: 250),
+                          ],
+                        ),
+                      ),
+                    ]),
+                  ),
+                ],
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
       bottomNavigationBar:
           BlocBuilder<ApartmentDetailsCubit, ApartmentDetailsState>(

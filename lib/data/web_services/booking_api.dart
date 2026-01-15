@@ -1,40 +1,22 @@
 import 'package:dio/dio.dart';
-import 'package:pluto_ui/constants/strings.dart';
 import 'package:pluto_ui/data/models/create_booking_model.dart';
 import 'package:pluto_ui/data/models/history_model.dart';
 import 'package:pluto_ui/data/models/registration_model.dart';
 import 'package:pluto_ui/data/models/update_booking_request_model.dart';
 import 'package:pluto_ui/data/models/update_registration_model.dart';
+import 'package:pluto_ui/data/web_services/dio_factory.dart';
 import 'package:pluto_ui/data/web_services/login_api.dart';
 
 class BookingApi {
   static const String _endpoint = '/bookings';
-  late Dio _dio;
-
-  BookingApi._internal() {
-    BaseOptions options = BaseOptions(
-      baseUrl: baseUrl,
-      receiveDataWhenStatusError: true,
-      connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(seconds: 60),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    );
-    _dio = Dio(options);
-  }
-
+  final Dio _dio = DioFactory.getDio();
+  BookingApi._internal();
   static final BookingApi _singleton = BookingApi._internal();
   factory BookingApi() => _singleton;
 
   // --- Helper Function for Consistent Error Handling ---
   void _handleDioError(DioException e) {
     print('❌ DIO EXCEPTION CAUGHT: ${e.response?.statusCode ?? e.type}');
-
-    if (e.response?.statusCode == 401) {
-      throw ApiException('Unauthorized: Session expired or invalid token.');
-    }
 
     if (e.response?.statusCode == 500) {
       throw ApiException('Server Error (500). Please try again later.');
@@ -73,7 +55,6 @@ class BookingApi {
 
       throw ApiException("Unexpected response from server.");
     } on DioException catch (e) {
-      // Special handling for 422 Validation Errors to show specific field errors
       if (e.response?.statusCode == 422) {
         final responseData = e.response?.data;
         if (responseData is Map<String, dynamic> &&
@@ -86,6 +67,9 @@ class BookingApi {
         }
       }
 
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       // Handle everything else via helper
       _handleDioError(e);
       rethrow;
@@ -119,6 +103,9 @@ class BookingApi {
 
       throw ApiException("Failed to load history");
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       _handleDioError(e);
       rethrow;
     } catch (e) {
@@ -195,14 +182,16 @@ class BookingApi {
         );
       }
 
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
+
       _handleDioError(e);
       rethrow;
     } catch (e) {
       throw ApiException("An unexpected error occurred: ${e.toString()}");
     }
   }
-
-  // Inside BookingApi class
 
   Future<List<RegistrationModel>> fetchRegistrations(String token) async {
     try {
@@ -229,6 +218,9 @@ class BookingApi {
 
       throw ApiException("Failed to load registration requests.");
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       _handleDioError(e);
       rethrow;
     } catch (e) {
@@ -254,6 +246,9 @@ class BookingApi {
         throw ApiException(
           e.response?.data['message'] ?? "Could not accept booking.",
         );
+      }
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
       }
       _handleDioError(e);
       rethrow;
@@ -282,6 +277,10 @@ class BookingApi {
         throw ApiException(
           e.response?.data['message'] ?? "Could not decline booking.",
         );
+      }
+
+      if (e.response?.statusCode == 404) {
+        throw ApiException("Booking not found.");
       }
       _handleDioError(e);
       rethrow;
@@ -317,6 +316,9 @@ class BookingApi {
 
       throw ApiException("Failed to load update requests.");
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       _handleDioError(e);
       rethrow;
     } catch (e) {
@@ -342,14 +344,15 @@ class BookingApi {
           e.response?.data['message'] ?? "Could not accept update request.",
         );
       }
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       _handleDioError(e);
       rethrow;
     } catch (e) {
       throw ApiException("An unexpected error occurred: ${e.toString()}");
     }
   }
-
-  // Inside BookingApi class
 
   Future<String> deleteUpdateRequest(String token, int requestId) async {
     try {
@@ -366,6 +369,9 @@ class BookingApi {
     } on DioException catch (e) {
       if (e.response?.statusCode == 403) {
         throw ApiException("You are not authorized to delete this request.");
+      }
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
       }
       _handleDioError(e);
       rethrow;

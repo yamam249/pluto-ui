@@ -338,7 +338,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   bool _isLoading = false;
 
   Map<String, List<String>> validationErrors = {};
-  final DateTime afterTomorrow = DateTime.now().add(const Duration(days: 2));
+  final DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
 
   String? getErrorForField(String fieldKey) {
     if (validationErrors.containsKey(fieldKey) &&
@@ -357,10 +357,10 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     DateTime initialDate;
 
     if (isFromDate) {
-      firstDate = afterTomorrow;
-      initialDate = fromDate ?? afterTomorrow;
+      firstDate = tomorrow;
+      initialDate = fromDate ?? tomorrow;
     } else {
-      firstDate = fromDate ?? afterTomorrow;
+      firstDate = fromDate ?? tomorrow;
       initialDate = toDate ?? firstDate;
     }
 

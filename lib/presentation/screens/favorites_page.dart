@@ -117,6 +117,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pluto_ui/business_logic/favorite_cubit/cubit/favorite_cubit.dart';
+import 'package:pluto_ui/constants/app_colors.dart';
 import 'package:pluto_ui/presentation/screens/apartment_details_screen.dart';
 import 'package:pluto_ui/presentation/widgets/place_card.dart';
 
@@ -205,15 +206,18 @@ class _FavoritesPageState extends State<FavoritesPage> {
               ),
             );
           } else if (state is FavoriteError) {
+            print(state.message);
+
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Error: ${state.message}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: fontColor),
+                  Icon(
+                    Icons.error_outline,
+                    size: 60,
+                    color: AppTheme.kColorDanger,
                   ),
+                  const SizedBox(height: 16),
                 ],
               ),
             );

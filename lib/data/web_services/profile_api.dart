@@ -1,37 +1,20 @@
 import 'package:dio/dio.dart';
-import 'package:pluto_ui/constants/strings.dart';
 import 'package:pluto_ui/data/models/profile_model.dart';
+import 'package:pluto_ui/data/web_services/dio_factory.dart';
 import 'package:pluto_ui/data/web_services/login_api.dart' show ApiException;
 
 class ProfileApi {
   static const String _endpoint = '/user/profile';
-  final Dio _dio;
-
-  // --- Singleton Pattern ---
-  ProfileApi._internal()
-    : _dio = Dio(
-        BaseOptions(
-          baseUrl: baseUrl,
-          connectTimeout: const Duration(seconds: 60),
-          receiveTimeout: const Duration(seconds: 60),
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-        ),
-      );
+  final Dio _dio = DioFactory.getDio();
 
   static final ProfileApi _singleton = ProfileApi._internal();
-
+  ProfileApi._internal();
   factory ProfileApi() => _singleton;
 
   // --- Consistent Error Handling ---
   void _handleDioError(DioException e) {
     print('❌ PROFILE DIO EXCEPTION: ${e.response?.statusCode ?? e.type}');
 
-    if (e.response?.statusCode == 401) {
-      throw ApiException('Unauthorized: Please log in again.');
-    }
     if (e.response?.statusCode == 500) {
       throw ApiException('Server error (500). Please try again later.');
     }

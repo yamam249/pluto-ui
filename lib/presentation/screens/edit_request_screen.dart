@@ -357,7 +357,7 @@ class _EditRequestScreenState extends State<EditRequestScreen> {
 
   Map<String, List<String>> validationErrors = {};
 
-  final DateTime afterTomorrow = DateTime.now().add(const Duration(days: 2));
+  final DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
 
   String? getErrorForField(String fieldKey) {
     if (validationErrors.containsKey(fieldKey) &&
@@ -378,10 +378,10 @@ class _EditRequestScreenState extends State<EditRequestScreen> {
     DateTime initialDate;
 
     if (isFromDate) {
-      firstDate = afterTomorrow;
-      initialDate = fromDate ?? afterTomorrow;
+      firstDate = tomorrow;
+      initialDate = fromDate ?? tomorrow;
     } else {
-      firstDate = fromDate ?? afterTomorrow;
+      firstDate = fromDate ?? tomorrow;
       initialDate = toDate ?? firstDate;
     }
 

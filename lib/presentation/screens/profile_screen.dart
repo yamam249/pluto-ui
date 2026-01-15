@@ -241,6 +241,7 @@ import 'profile_info_screen.dart';
 import 'history_screen.dart';
 import 'mode_screen.dart';
 import 'language_screen.dart';
+import 'package:pluto_ui/main.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -450,6 +451,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
+
               context.read<LoginCubit>().logout();
             },
             child: Text(

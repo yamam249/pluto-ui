@@ -353,156 +353,164 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
         centerTitle: true,
         iconTheme: IconThemeData(color: fontColor),
       ),
-      body: BlocBuilder<ProfileCubit, ProfileState>(
-        builder: (context, state) {
-          if (state is ProfileLoading) {
-            return Center(
-              child: CircularProgressIndicator(color: primaryColor),
-            );
-          } else if (state is ProfileError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 60,
-                    color: AppTheme.kColorDanger,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(state.message, style: TextStyle(color: fontColor)),
-                ],
-              ),
-            );
-          } else if (state is ProfileLoaded) {
-            final profile = state.profile;
+      body: RefreshIndicator(
+        color: theme.primaryColor,
+        backgroundColor: theme.cardColor,
+        onRefresh: () async {
+          await context.read<ProfileCubit>().fetchProfile();
+        },
+        child: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            if (state is ProfileLoading) {
+              return Center(
+                child: CircularProgressIndicator(color: primaryColor),
+              );
+            } else if (state is ProfileError) {
+              print(state.message);
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Center(
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: 110,
-                          height: 110,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: primaryColor, width: 2),
-                            color: cardColor,
-                          ),
-                          child: ClipOval(
-                            child: Image.network(
-                              profile.profileImageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: cardColor,
-                                  child: Icon(
-                                    Icons.person,
-                                    size: 50,
-                                    color: fontColor?.withOpacity(0.5),
-                                  ),
-                                );
-                              },
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        value:
-                                            loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                            : null,
-                                      ),
-                                    );
-                                  },
-                            ),
-                          ),
-                        ),
-                        const Positioned(
-                          bottom: 5,
-                          right: 5,
-                          child: CircleAvatar(
-                            radius: 12,
-                            backgroundColor: Colors.green,
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 15,
-                            ),
-                          ),
-                        ),
-                      ],
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 60,
+                      color: AppTheme.kColorDanger,
                     ),
-                  ),
-                  const SizedBox(height: 25),
-                  _buildWalletCard(profile.balance, primaryColor),
-                  const SizedBox(height: 25),
-                  _sectionTitle("Personal Information", fontColor),
-                  _buildInfoCard(
-                    "First Name",
-                    profile.firstName,
-                    cardColor,
-                    fontColor,
-                    isDarkMode,
-                  ),
-                  _buildInfoCard(
-                    "Last Name",
-                    profile.lastName,
-                    cardColor,
-                    fontColor,
-                    isDarkMode,
-                  ),
-                  _buildInfoCard(
-                    "Phone",
-                    profile.phone,
-                    cardColor,
-                    fontColor,
-                    isDarkMode,
-                  ),
-                  _buildInfoCard(
-                    "Birthdate",
-                    profile.birthDate,
-                    cardColor,
-                    fontColor,
-                    isDarkMode,
-                  ),
-                  const SizedBox(height: 25),
-                  _sectionTitle("Identity Document", fontColor),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.network(
-                      profile.idImageUrl,
-                      height: 180,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              );
+            } else if (state is ProfileLoaded) {
+              final profile = state.profile;
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Center(
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 110,
+                            height: 110,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: primaryColor, width: 2),
+                              color: cardColor,
+                            ),
+                            child: ClipOval(
+                              child: Image.network(
+                                profile.profileImageUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: cardColor,
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: fontColor?.withOpacity(0.5),
+                                    ),
+                                  );
+                                },
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value:
+                                              loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                              : null,
+                                        ),
+                                      );
+                                    },
+                              ),
+                            ),
+                          ),
+                          const Positioned(
+                            bottom: 5,
+                            right: 5,
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundColor: Colors.green,
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 15,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    _buildWalletCard(profile.balance, primaryColor),
+                    const SizedBox(height: 25),
+                    _sectionTitle("Personal Information", fontColor),
+                    _buildInfoCard(
+                      "First Name",
+                      profile.firstName,
+                      cardColor,
+                      fontColor,
+                      isDarkMode,
+                    ),
+                    _buildInfoCard(
+                      "Last Name",
+                      profile.lastName,
+                      cardColor,
+                      fontColor,
+                      isDarkMode,
+                    ),
+                    _buildInfoCard(
+                      "Phone",
+                      profile.phone,
+                      cardColor,
+                      fontColor,
+                      isDarkMode,
+                    ),
+                    _buildInfoCard(
+                      "Birthdate",
+                      profile.birthDate,
+                      cardColor,
+                      fontColor,
+                      isDarkMode,
+                    ),
+                    const SizedBox(height: 25),
+                    _sectionTitle("Identity Document", fontColor),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        profile.idImageUrl,
                         height: 180,
-                        color: cardColor,
-                        child: Center(
-                          child: Icon(
-                            Icons.broken_image,
-                            color: fontColor,
-                            size: 50,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          height: 180,
+                          color: cardColor,
+                          child: Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              color: fontColor,
+                              size: 50,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                ],
-              ),
-            );
-          }
-          return const SizedBox.shrink();
-        },
+                    const SizedBox(height: 30),
+                  ],
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

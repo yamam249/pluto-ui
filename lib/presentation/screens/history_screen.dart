@@ -626,70 +626,82 @@ class _HistoryScreenState extends State<HistoryScreen> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: BlocListener<HistoryCubit, HistoryState>(
-        listener: (context, state) {
-          if (state is HistoryActionSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppTheme.kColorSuccess,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
+      body: RefreshIndicator(
+        color: theme.primaryColor,
+        backgroundColor: theme.cardColor,
+        onRefresh: () async {
+          await context.read<HistoryCubit>().fetchHistory();
         },
-        child: BlocBuilder<HistoryCubit, HistoryState>(
-          buildWhen: (previous, current) =>
-              current is HistoryLoading ||
-              current is HistoryLoaded ||
-              current is HistoryError,
-          builder: (context, state) {
-            if (state is HistoryLoading) {
-              return Center(
-                child: CircularProgressIndicator(color: theme.primaryColor),
-              );
-            } else if (state is HistoryError) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    state.message,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: AppTheme.kColorDanger),
-                  ),
+        child: BlocListener<HistoryCubit, HistoryState>(
+          listener: (context, state) {
+            if (state is HistoryActionSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: AppTheme.kColorSuccess,
+                  behavior: SnackBarBehavior.floating,
                 ),
-              );
-            } else if (state is HistoryLoaded) {
-              if (state.history.isEmpty) {
-                return Center(
-                  child: Text(
-                    "No bookings found",
-                    style: TextStyle(color: subFontColor),
-                  ),
-                );
-              }
-
-              final sortedHistory = List.from(state.history)
-                ..sort((a, b) => b.id.compareTo(a.id));
-
-              return ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-                itemCount: sortedHistory.length,
-                itemBuilder: (context, i) {
-                  return _buildHistoryCard(
-                    sortedHistory[i],
-                    theme,
-                    fontColor,
-                    subFontColor,
-                  );
-                },
               );
             }
-            return const SizedBox();
           },
+          child: BlocBuilder<HistoryCubit, HistoryState>(
+            buildWhen: (previous, current) =>
+                current is HistoryLoading ||
+                current is HistoryLoaded ||
+                current is HistoryError,
+            builder: (context, state) {
+              if (state is HistoryLoading) {
+                return Center(
+                  child: CircularProgressIndicator(color: theme.primaryColor),
+                );
+              } else if (state is HistoryError) {
+                print(state.message);
+
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 60,
+                        color: AppTheme.kColorDanger,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                );
+              } else if (state is HistoryLoaded) {
+                if (state.history.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "No bookings found",
+                      style: TextStyle(color: fontColor),
+                    ),
+                  );
+                }
+
+                final sortedHistory = List.from(state.history)
+                  ..sort((a, b) => b.id.compareTo(a.id));
+
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  itemCount: sortedHistory.length,
+                  itemBuilder: (context, i) {
+                    return _buildHistoryCard(
+                      sortedHistory[i],
+                      theme,
+                      fontColor,
+                      subFontColor,
+                    );
+                  },
+                );
+              }
+              return const SizedBox();
+            },
+          ),
         ),
       ),
     );

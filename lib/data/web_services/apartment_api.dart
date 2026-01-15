@@ -1,29 +1,16 @@
 import 'package:dio/dio.dart';
-import 'package:pluto_ui/constants/strings.dart';
 import 'package:pluto_ui/data/models/city_model.dart';
 import 'package:pluto_ui/data/models/governorate_model.dart';
+import 'package:pluto_ui/data/web_services/dio_factory.dart';
 import 'package:pluto_ui/data/web_services/login_api.dart' show ApiException;
 import '../models/apartment_model.dart';
 
 class ApartmentApi {
   static const String _endpoint = '/apartments';
-  final Dio _dio;
+  final Dio _dio = DioFactory.getDio();
 
-  ApartmentApi._internal()
-    : _dio = Dio(
-        BaseOptions(
-          baseUrl: baseUrl,
-          connectTimeout: const Duration(seconds: 60),
-          receiveTimeout: const Duration(seconds: 60),
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-        ),
-      );
-
+  ApartmentApi._internal();
   static final ApartmentApi _singleton = ApartmentApi._internal();
-
   factory ApartmentApi() => _singleton;
 
   // --- Helper Function for Consistent Error Handling ---
@@ -31,9 +18,6 @@ class ApartmentApi {
     print('❌ DIO EXCEPTION CAUGHT: ${e.response?.statusCode ?? e.type}');
     print('❌ DIO EXCEPTION DATA: ${e.response?.data}');
 
-    if (e.response?.statusCode == 401) {
-      throw ApiException('Unauthorized: Session expired or invalid token.');
-    }
     if (e.response?.statusCode == 500) {
       throw ApiException(
         'Internal Server Error (500). Check the backend logs for details.',
@@ -101,6 +85,9 @@ class ApartmentApi {
         'Failed to fetch apartments with status: ${response.statusCode}',
       );
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       _handleDioError(e);
       rethrow; // Re-throw the handled exception
     } on Exception catch (e) {
@@ -147,6 +134,9 @@ class ApartmentApi {
         'Failed to fetch apartment details with status: ${response.statusCode}',
       );
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       _handleDioError(e);
       rethrow;
     } on Exception catch (e) {
@@ -184,6 +174,9 @@ class ApartmentApi {
         'Failed to load governorates with status: ${response.statusCode}',
       );
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       _handleDioError(e);
       rethrow;
     } on Exception catch (e) {
@@ -225,6 +218,9 @@ class ApartmentApi {
         'Failed to load cities with status: ${response.statusCode}',
       );
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       _handleDioError(e);
       rethrow;
     } on Exception catch (e) {
@@ -260,6 +256,9 @@ class ApartmentApi {
         'Failed to load cities with status: ${response.statusCode}',
       );
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       _handleDioError(e);
       rethrow;
     } on Exception catch (e) {
@@ -302,6 +301,9 @@ class ApartmentApi {
         'Failed to fetch favorites with status: ${response.statusCode}',
       );
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw ApiException(" not found.");
+      }
       _handleDioError(e);
       rethrow;
     } on Exception catch (e) {

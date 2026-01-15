@@ -36,6 +36,11 @@ class LoginCubit extends Cubit<LoginState> {
     emit(AuthStatusChecked(token != null));
   }
 
+  Future<bool> isUserLoggedIn() async {
+    final token = await loginAuthRepo.getAuthToken();
+    return token != null; // Directly returns true if token exists, false if not
+  }
+
   Future<void> logout() async {
     emit(LogoutLoading());
 

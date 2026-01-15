@@ -221,7 +221,10 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:ui';
+
+import 'package:pluto_ui/business_logic/login_cubit/cubit/login_cubit.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -284,9 +287,16 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    Future.delayed(const Duration(milliseconds: 4500), () {
+    Future.delayed(const Duration(milliseconds: 4500), () async {
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/login');
+        // We call the function and get a direct True/False answer
+        bool loggedIn = await context.read<LoginCubit>().isUserLoggedIn();
+
+        if (loggedIn) {
+          Navigator.pushReplacementNamed(context, '/app_router');
+        } else {
+          Navigator.pushReplacementNamed(context, '/login');
+        }
       }
     });
   }
