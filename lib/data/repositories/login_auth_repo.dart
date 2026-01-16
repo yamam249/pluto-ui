@@ -12,7 +12,12 @@ class LoginAuthRepo {
 
   Future<void> loginUser(String phone, String password) async {
     try {
-      final requestModel = LoginRequestModel(phone: phone, password: password);
+      final fcmToken = await secureStorageService.getFcmToken();
+      final requestModel = LoginRequestModel(
+        phone: phone,
+        password: password,
+        fcmToken: fcmToken,
+      );
 
       final LoginResponseModel response = await loginApi.loginUser(
         requestModel,
@@ -32,7 +37,6 @@ class LoginAuthRepo {
     }
   }
 
-  // Helper function to check login status
   Future<String?> getAuthToken() async {
     return await secureStorageService.getToken();
   }

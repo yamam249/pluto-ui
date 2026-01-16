@@ -1,7 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pluto_ui/business_logic/create_booking_cubit/cubit/create_booking_cubit.dart';
 import 'package:pluto_ui/business_logic/history_cubit/cubit/history_cubit.dart';
@@ -33,16 +36,26 @@ import 'package:pluto_ui/business_logic/favorite_cubit/cubit/favorite_cubit.dart
 import 'package:pluto_ui/business_logic/filter_cubit/cubit/filter_cubit.dart';
 import 'package:pluto_ui/business_logic/post_apartment_cubit/cubit/post_apartment_cubit.dart';
 import 'package:pluto_ui/business_logic/profile_cubit/cubit/profile_cubit.dart';
+import 'package:pluto_ui/firebase_options.dart';
 import 'package:pluto_ui/presentation/screens/log_in_screen.dart';
 import 'package:pluto_ui/presentation/screens/mode_screen.dart';
 import 'package:pluto_ui/presentation/screens/sign_up_screen.dart';
 import 'package:pluto_ui/root_layout.dart';
 import 'package:pluto_ui/presentation/screens/splash_screen.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+}
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   await EasyLocalization.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((
     _,
@@ -59,38 +72,136 @@ void main() async {
   });
 }
 
-class PlutoApp extends StatelessWidget {
+class PlutoApp extends StatefulWidget {
   PlutoApp({super.key});
 
+  @override
+  State<PlutoApp> createState() => _PlutoAppState();
+}
+
+class _PlutoAppState extends State<PlutoApp> {
   final SignupApi signupApi = SignupApi();
+
   final LoginApi loginApi = LoginApi();
+
   final ApartmentApi apartmentApi = ApartmentApi();
+
   final SecureStorageService secureStorageService = SecureStorageService();
+
   final ProfileApi profileApi = ProfileApi();
+
   final PostApartmentApi postApartmentApi = PostApartmentApi();
+
   final BookingApi bookingApi = BookingApi();
 
   late final SignupRepo signupRepo = SignupRepo(signupApi);
+
   late final LoginAuthRepo loginAuthRepo = LoginAuthRepo(
     loginApi,
     secureStorageService,
   );
+
   late final ApartmentRepo apartmentRepo = ApartmentRepo(
     apartmentApi,
     secureStorageService,
   );
+
   late final ProfileRepo profileRepo = ProfileRepo(
     profileApi,
     secureStorageService,
   );
+
   late final PostApartmentRepo postApartmentRepo = PostApartmentRepo(
     postApartmentApi,
     secureStorageService,
   );
+
   late final BookingRepo bookingRepo = BookingRepo(
     bookingApi,
     secureStorageService,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    _initPushNotifications();
+  }
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> _initPushNotifications() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'high_importance_channel',
+      'High Importance Notifications',
+      description:
+          'This channel is used for important apartment booking updates.',
+      importance: Importance.max,
+    );
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(channel);
+
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: DarwinInitializationSettings(),
+        );
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    String? token = await messaging.getToken();
+    if (token != null) {
+      await secureStorageService.saveFcmToken(token);
+    }
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              importance: Importance.max,
+              priority: Priority.high,
+              ticker: 'ticker',
+              fullScreenIntent: true,
+              styleInformation: const DefaultStyleInformation(true, true),
+              icon: android.smallIcon,
+            ),
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +267,6 @@ class PlutoApp extends StatelessWidget {
           return BlocListener<LoginCubit, LoginState>(
             listener: (context, state) {
               if (state is LogoutSuccess) {
-                // This is the global trigger for navigation
                 navigatorKey.currentState?.pushNamedAndRemoveUntil(
                   '/login',
                   (route) => false,
@@ -174,7 +284,7 @@ class PlutoApp extends StatelessWidget {
 
                   theme: AppTheme.lightTheme,
                   darkTheme: AppTheme.darkTheme,
-                  themeMode: mode, // This links the Cubit state to the UI
+                  themeMode: mode,
 
                   initialRoute: '/',
                   routes: {

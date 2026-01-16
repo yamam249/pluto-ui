@@ -5,6 +5,9 @@ class SecureStorageService {
 
   static const String _tokenKey = 'auth_token';
   static const String _themeKey = 'app_theme';
+
+  static const String _fcmTokenKey = 'fcm_token';
+
   Future<void> saveToken(String token) async {
     await _secureStorage.write(key: _tokenKey, value: token);
   }
@@ -23,5 +26,13 @@ class SecureStorageService {
 
   Future<String?> getTheme() async {
     return await _secureStorage.read(key: _themeKey);
+  }
+
+  Future<void> saveFcmToken(String token) async {
+    await _secureStorage.write(key: _fcmTokenKey, value: token);
+  }
+
+  Future<String?> getFcmToken() async {
+    return await _secureStorage.read(key: _fcmTokenKey);
   }
 }
