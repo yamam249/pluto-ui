@@ -1,6 +1,6 @@
 // for the base url
 
-final String localIp = '192.168.1.105';
+final String localIp = '192.168.1.104';
 
 // final baseUrl = 'http://$localIp:8000/api/';
 
